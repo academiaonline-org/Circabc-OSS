@@ -47,7 +47,7 @@ describe("Create users", function () {
 
 
   it("successfully created interest group admin", function () {
-    for (var i = 5; i < 6; i++) {
+    for (var i = 1; i < 5; i++) {
       cy.visit("/me/roles", {
         failOnStatusCode: false,
       });
