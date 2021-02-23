@@ -40,7 +40,7 @@ Cypress.Commands.add('login', (username, password) => {
 
   cy.request({
     method: 'POST',
-    url: 'http://localhost/service/api/login?guest=true',
+    url: 'http://10.69.125.133/service/api/login?guest=true',
     body: {
       username: username,
       password: password
@@ -50,7 +50,7 @@ Cypress.Commands.add('login', (username, password) => {
 
     cy.request({
       method: 'GET',
-      url: 'http://localhost/service/circabc/users/' + username,
+      url: 'http://10.69.125.133/service/circabc/users/' + username,
       headers: { Authorization: 'Basic ' + btoa(resp.body.data.ticket) }
     }).then(resp => {
       let user = resp.body;
@@ -85,7 +85,7 @@ Cypress.Commands.add('logout', () => {
     cy.request({
       method: 'DELETE',
       url:
-        'http://localhost/service/api/login/ticket/' +
+        'http://10.69.125.133/service/api/login/ticket/' +
         ticket +
         '?format=json',
       headers: { Authorization: 'Basic ' + btoa(ticket) }

@@ -1,5 +1,6 @@
 {
-  "baseUrl": "http://localhost/ui",
+  "serviceUrl": "http://10.69.125.133/service",
+  "baseUrl": "http://10.69.125.133/ui",
   "testFiles": [
     "circabc/home-page.spec.js",
     "circabc/login/login-page.spec.js",
@@ -44,6 +45,43 @@
     "interest.group.admin.last.name": "Admin",
     "interest.group.admin.email": "Ig1.admin@circabc.eu",
     "interest.group.admin.phone": "123 123",
-    "interest.group.admin.postalAddress": "unknown"
+    "interest.group.admin.postalAddress": "unknown",
+    "user1.username":"benoit",
+    "user1.password":"password123",
+    "user1.first.name": "Benoit",
+    "user1.last.name": "Brisefer",
+    "user1.email": "benoit.brisefer@email.dummy",
+    "user1.phone": "123 123",
+    "user1.postalAddress": "unknown",
+    "user2.username":"dominique",
+    "user2.password":"password123",
+    "user2.first.name": "Dominique",
+    "user2.last.name": "Nikenic",
+    "user2.email": "dominique.nikenic@email.dummy",
+    "user2.phone": "123 123",
+    "user2.postalAddress": "unknown",
+    "user3.username":"luisa",
+    "user3.password":"password123",
+    "user3.first.name": "Luisa",
+    "user3.last.name": "Macieira",
+    "user3.email": "luisa.maceria@email.dummy",
+    "user3.phone": "123 123",
+    "user3.postalAddress": "unknown",
+    "user4.username":"gabor",
+    "user4.password":"password123",
+    "user4.first.name": "Gabor",
+    "user4.last.name": "Daddy",
+    "user4.email": "gabor.daddy@email.dummy",
+    "user4.phone": "123 123",
+    "user4.postalAddress": "unknown",
+    "user5.username":"hanine",
+    "user5.password":"password123",
+    "user5.first.name": "Hanine",
+    "user5.last.name": "Zouzoul",
+    "user5.email": "hanine.zouzoul@email.dummy",
+    "user5.phone": "123 123",
+    "user5.postalAddress": "unknown"
+ 
+
   }
 }
