@@ -57,89 +57,89 @@ jobs:                                                                          #
             docker network create $app                                         ;
           done                                                                 ;
         ########################################################################
-        command='                                                              \
+        command="                                                              \
           --lower_case_table_names=1 --transaction-isolation=READ-COMMITTED    \
-        '                                                                      ;
-        environment='                                                          \
+        "                                                                      ;
+        environment="                                                          \
           -e MYSQL_ROOT_PASSWORD=password                                      \
-        '                                                                      ;
+        "                                                                      ;
         name=db                                                                ;
         network=db                                                             ;
-        ports='                                                                \
+        ports="                                                                \
           -p 3306:3306                                                         \
-        '                                                                      ;
-        volumes='                                                              \
+        "                                                                      ;
+        volumes="                                                              \
           -v ./mysql/init:/docker-entrypoint-initdb.d/:ro                      \
-        '                                                                      ;
+        "                                                                      ;
         ########################################################################
         image=mysql:5.6                                                        ;
         ########################################################################
         _docker_run                                                            ;
         ########################################################################
-        command='                                                              \
-        '                                                                      ;
-        environment='                                                          \
+        command="                                                              \
+        "                                                                      ;
+        environment="                                                          \
           -e PMA_ARBITRARY=1                                                   \
           -e PMA_HOST=db                                                       \
           -e PMA_PORT=3306                                                     \
-        '                                                                      ;
+        "                                                                      ;
         name=db_admin                                                          ;
         network=db_admin                                                       ;
-        ports='                                                                \
+        ports="                                                                \
           -p 83:80                                                             \
-        '                                                                      ;
-        volumes='                                                              \
-        '                                                                      ;
+        "                                                                      ;
+        volumes="                                                              \
+        "                                                                      ;
         ########################################################################
         image=phpmyadmin/phpmyadmin                                            ;
         ########################################################################
         _docker_run                                                            ;
         ########################################################################
-        command='                                                              \
-        '                                                                      ;
-        environment='                                                          \
-        '                                                                      ;
+        command="                                                              \
+        "                                                                      ;
+        environment="                                                          \
+        "                                                                      ;
         name=tomcat                                                            ;
         network=tomcat                                                         ;
-        ports='                                                                \
+        ports="                                                                \
           -p 81:8080                                                           \
-        '                                                                      ;
-        volumes='                                                              \
-        '                                                                      ;
+        "                                                                      ;
+        volumes="                                                              \
+        "                                                                      ;
         ########################################################################
         image=$GITHUB_REPOSITORY:$release-testing-$name                        ;
         ########################################################################
         _docker_run                                                            ;
         ########################################################################
-        command='                                                              \
-        '                                                                      ;
-        environment='                                                          \
-        '                                                                      ;
+        command="                                                              \
+        "                                                                      ;
+        environment="                                                          \
+        "                                                                      ;
         name=angular                                                           ;
         network=angular                                                        ;
-        ports='                                                                \
+        ports="                                                                \
           -p 82:80                                                             \
-        '                                                                      ;
-        volumes='                                                              \
-        '                                                                      ;
+        "                                                                      ;
+        volumes="                                                              \
+        "                                                                      ;
         ########################################################################
         image=$GITHUB_REPOSITORY:$release-testing-$name                        ;
         ########################################################################
         _docker_run                                                            ;
         ########################################################################
-        command='                                                              \
-        '                                                                      ;
-        environment='                                                          \
-        '                                                                      ;
+        command="                                                              \
+        "                                                                      ;
+        environment="                                                          \
+        "                                                                      ;
         name=proxy                                                             ;
         network=proxy                                                          ;
-        ports='                                                                \
+        ports="                                                                \
           -p 8080:80                                                           \
           -p 8443:443                                                          \
-        '                                                                      ;
-        volumes='                                                              \
+        "                                                                      ;
+        volumes="                                                              \
           -v ./proxy/conf:/etc/nginx                                           \
-        '                                                                      ;
+        "                                                                      ;
         ########################################################################
         image=nginx:alpine                                                     ;
         ########################################################################
