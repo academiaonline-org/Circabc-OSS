@@ -69,7 +69,7 @@ jobs:                                                                          #
           -p 3306:3306                                                         \
         "                                                                      ;
         volumes="                                                              \
-          -v ./mysql/init:/docker-entrypoint-initdb.d/:ro                      \
+          -v ${PWD}/circabc-docker/mysql/init:/docker-entrypoint-initdb.d/:ro  \
         "                                                                      ;
         ########################################################################
         image=mysql:5.6                                                        ;
@@ -138,7 +138,7 @@ jobs:                                                                          #
           -p 8443:443                                                          \
         "                                                                      ;
         volumes="                                                              \
-          -v ./proxy/conf:/etc/nginx                                           \
+          -v ${PWD}/circabc-docker/proxy/conf:/etc/nginx                       \
         "                                                                      ;
         ########################################################################
         image=nginx:alpine                                                     ;
