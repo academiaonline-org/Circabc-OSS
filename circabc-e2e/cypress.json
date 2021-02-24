@@ -6,6 +6,7 @@
     "circabc/login/login-page.spec.js",
     "circabc/logout/logout-page.spec.js",
     "circabc/user/create-page.spec.js",
+    "circabc/user/create-page-5user.spec.js",
     "circabc/header/create-page.spec.js",
     "circabc/category/create-page.spec.js",
     "circabc/interest-group/create-page.spec.js",
