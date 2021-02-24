@@ -1,5 +1,5 @@
 
-POST hthttp://10.69.125.133/service/api/person/changepassword/circabc_admin
+POST http://10.69.125.133/service/api/person/changepassword/circabc_admin
 content-type: application/json
 Authorization: Basic admin:admin
 
