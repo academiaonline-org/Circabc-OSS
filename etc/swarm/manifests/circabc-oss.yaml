@@ -1,0 +1,37 @@
+services:
+  angular:
+    image: academiaonline/circabc-oss:latest-angular
+    ports:
+    - "82:80"
+    container_name: angular
+  db:
+    image: mysql:5.6
+    ports:
+    - "3306:3306"  
+    environment:
+    - MYSQL_ROOT_PASSWORD=password
+    volumes:
+    - ./circabc-docker/mysql/init:/docker-entrypoint-initdb.d/:ro
+    command: --lower_case_table_names=1 --transaction-isolation=READ-COMMITTED
+  db_admin:
+    image: phpmyadmin/phpmyadmin
+    environment: 
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    ports:
+    - "83:80"
+  proxy: 
+    image: nginx:alpine
+    container_name: proxy-circabc
+    volumes:
+    - ./circabc-docker/proxy/conf:/etc/nginx
+    ports:
+    - 8080:80
+    - 8443:443
+  tomcat:
+    image: academiaonline/circabc-oss:latest-tomcat
+    ports:
+    - "81:8080"
+version: "3.8"
+      
