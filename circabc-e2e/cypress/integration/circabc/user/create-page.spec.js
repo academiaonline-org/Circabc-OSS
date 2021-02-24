@@ -6,7 +6,9 @@ describe("Create users", function () {
     );
   });
 
-  it("successfully created category admin", function () {
+   
+   
+   it("successfully created category admin", function () {
     cy.visit("/me/roles", {
       failOnStatusCode: false,
     });
@@ -22,6 +24,7 @@ describe("Create users", function () {
 
     cy.get("[data-cy=create]").click();
   });
+
 
   it("successfully created interest group admin", function () {
     cy.visit("/me/roles", {
@@ -40,4 +43,7 @@ describe("Create users", function () {
     cy.get("[data-cy=create]").click();
     cy.contains("Success");
   });
+
+
+  
 });
