@@ -147,12 +147,12 @@ jobs:                                                                          #
         ########################################################################
         for app in angular db db_admin proxy tomcat                            ;
           do                                                                   \
-            docker exec $app ps
+            docker logs $app
           done                                                                 ;
         ########################################################################
         for app in angular db db_admin proxy tomcat                            ;
           do                                                                   \
-            docker logs $app
+            docker exec $app ps
           done                                                                 ;
         ########################################################################
         for app in angular db db_admin proxy tomcat                            ;
