@@ -37,8 +37,8 @@ services:
     ports:
     - 8080:80
     volumes:
-    - ${PWD}/circabc-docker/proxy/conf/default.conf:/etc/nginx/conf.d/default.conf:ro
-    - ${PWD}/circabc-docker/proxy/conf/nginx.conf:/etc/nginx/nginx.conf:ro
+    - ${PWD}/circabc-docker/proxy/conf/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf:ro
+    - ${PWD}/circabc-docker/proxy/conf/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     - nginx-cache:/var/cache/nginx
     - nginx-run:/var/run
   tomcat:
