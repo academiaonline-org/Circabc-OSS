@@ -131,7 +131,9 @@ jobs:                                                                          #
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
-            docker logs ${app} | grep ${log} && break                          ;
+            docker logs ${app}                                                 \
+            |                                                                  \
+            grep "${log}" && break                                             ;
           done                                                                 ;
         ########################################################################
         app=db                                                                 ;
@@ -139,7 +141,9 @@ jobs:                                                                          #
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
-            docker logs ${app} | grep ${log} && break                          ;
+            docker logs ${app}                                                 \
+            |                                                                  \
+            grep "${log}" && break                                             ;
           done                                                                 ;
         ########################################################################
         app=proxy                                                              ;
@@ -147,7 +151,9 @@ jobs:                                                                          #
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
-            docker logs ${app} | grep ${log} && break                          ;
+            docker logs ${app}                                                 \
+            |                                                                  \
+            grep "${log}" && break                                             ;
           done                                                                 ;
         ########################################################################
         app=tomcat                                                             ;
@@ -155,7 +161,9 @@ jobs:                                                                          #
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
-            docker logs ${app} | grep ${log} && break                          ;
+            docker logs ${app}                                                 \
+            |                                                                  \
+            grep "${log}" && break                                             ;
           done                                                                 ;
         ########################################################################
         app=proxy                                                              ;
@@ -166,7 +174,7 @@ jobs:                                                                          #
             docker exec ${app}                                                 \
             curl localhost/ui/login                                            \
             |                                                                  \
-            grep ${log} && break                                               ;
+            grep "${log}" && break                                             ;
           done                                                                 ;
   ##############################################################################
   swarm:                                                                       #
@@ -222,7 +230,9 @@ jobs:                                                                          #
             while true                                                         ;
               do                                                               \
                 sleep 10                                                       ;
-                docker service ls | grep "$app.*global.*\([0-9]\)/\1" && break ;
+                docker service ls                                              \
+                |                                                              \
+                grep "$app.*global.*\([0-9]\)/\1" && break                     ;
               done                                                             ;
           done                                                                 ;
   ##############################################################################
@@ -278,7 +288,9 @@ jobs:                                                                          #
             while true                                                         ;
               do                                                               \
                 sleep 10                                                       ;
-                kubectl get deploy | grep "$app.*\([0-9]\)/\1" && break        ;
+                kubectl get deploy                                             \
+                |                                                              \
+                grep "$app.*\([0-9]\)/\1" && break                             ;
               done                                                             ;
           done                                                                 ;
         ########################################################################
@@ -287,7 +299,9 @@ jobs:                                                                          #
             while true                                                         ;
               do                                                               \
                 sleep 10                                                       ;
-                kubectl get ds | grep "$app.*1.*1.*1.*1.*1" && break           ;
+                kubectl get ds                                                 \
+                |                                                              \
+                grep "$app.*1.*1.*1.*1.*1" && break                            ;
               done                                                             ;
           done                                                                 ;
         ########################################################################
@@ -320,7 +334,7 @@ jobs:                                                                          #
             sleep 10                                                           ;
             kubectl logs deploy/${app}                                         \
             |                                                                  \
-            grep ${log} && break                                               ;
+            grep "${log}" && break                                             ;
           done                                                                 ;
         ########################################################################
         app=db                                                                 ;
@@ -330,7 +344,7 @@ jobs:                                                                          #
             sleep 10                                                           ;
             kubectl logs deploy/${app}                                         \
             |                                                                  \
-            grep ${log} && break                                               ;
+            grep "${log}" && break                                             ;
           done                                                                 ;
         ########################################################################
         app=tomcat                                                             ;
@@ -340,7 +354,7 @@ jobs:                                                                          #
             sleep 10                                                           ;
             kubectl logs deploy/${app}                                         \
             |                                                                  \
-            grep ${log} && break                                               ;
+            grep "${log}" && break                                             ;
           done                                                                 ;
         ########################################################################
         app=proxy                                                              ;
@@ -350,7 +364,7 @@ jobs:                                                                          #
             sleep 10                                                           ;
             kubectl logs ds/${app}                                             \
             |                                                                  \
-            grep ${log} && break                                               ;
+            grep "${log}" && break                                             ;
           done                                                                 ;
         ########################################################################
         app=proxy                                                              ;
@@ -361,6 +375,6 @@ jobs:                                                                          #
             kubectl exec ds/${app}                                             \
             curl localhost/ui/login                                            \
             |                                                                  \
-            grep ${log} && break                                               ;
+            grep "${log}" && break                                             ;
           done                                                                 ;
 ################################################################################
