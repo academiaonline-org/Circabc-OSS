@@ -8,7 +8,7 @@ set -e                                                                          
 #################################################################################
 release=${1}                                                                    ;
 #################################################################################
-git checkout --branch ${release}                                                ;
+git checkout -b ${release}                                                      ;
 #################################################################################
 sed --in-place /branch=docker/s/docker/${release}/ README.md                    ;
 sed --in-place /image.*latest/s/latest/${release#v}/ etc/*/manifests/*.yaml     ;
