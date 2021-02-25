@@ -1,38 +1,60 @@
 services:
   angular:
+    deploy:
+      mode: replicated
+      placement:
+        constraints:
+        - node.role == worker
+      replicas: 1  
     expose:
     - 80
     image: academiaonline/circabc-oss:latest-angular
   db:
     command: --lower_case_table_names=1 --transaction-isolation=READ-COMMITTED
+    deploy:
+      mode: replicated
+      placement:
+        constraints:
+        - node.role == worker
+      replicas: 1    
     environment:
     - MYSQL_ROOT_PASSWORD=password
     expose:
     - 3306
     image: mysql:5.6
     volumes:
-    - ${PWD}/circabc-docker/mysql/init:/docker-entrypoint-initdb.d/:ro
-  db_admin:
-    environment: 
-      PMA_HOST: db
-      PMA_PORT: 3306
-      PMA_ARBITRARY: 1
+    - ${PWD}/circabc-docker/mysql/init/setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro
+    - /tmp/db:/var/lib/mysql
+  proxy:
+    deploy:
+      mode: global
+      placement:
+        constraints:
+        - node.role == worker
     expose:
     - 80
-    image: phpmyadmin/phpmyadmin
-  proxy: 
-    expose:
-    - 80
-    - 443
-    image: nginx:alpine
+    image: academiaonline/nginx:8.2
     ports:
     - 8080:80
-    - 8443:443
     volumes:
-    - ${PWD}/circabc-docker/proxy/conf:/etc/nginx
+    - ${PWD}/circabc-docker/proxy/conf/default.conf:/etc/nginx/conf.d/default.conf:ro
+    - ${PWD}/circabc-docker/proxy/conf/nginx.conf:/etc/nginx/nginx.conf:ro
+    - nginx-cache:/var/cache/nginx
+    - nginx-run:/var/run
   tomcat:
+    deploy:
+      mode: replicated
+      placement:
+        constraints:
+        - node.role == worker
+      replicas: 1  
     expose:
     - 8080
     image: academiaonline/circabc-oss:latest-tomcat
+    volumes:
+    - /tmp/tomcat:/usr/local/tomcat
 version: "3.8"
+volumes:
+  nginx-cache:
+  nginx-run:
       
