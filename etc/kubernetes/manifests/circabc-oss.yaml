@@ -177,15 +177,6 @@ spec:
         ports:
         - containerPort: 8080
           protocol: TCP
-        volumeMounts:
-        - 
-          mountPath: /usr/local/tomcat          
-          name: tomcat
-      volumes:
-      - 
-        name: tomcat
-        persistentVolumeClaim:
-          claimName: tomcat
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -201,33 +192,9 @@ spec:
   storageClassName: local
 ---
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: tomcat
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-  - ReadWriteOnce
-  hostPath:
-    path: /tmp/tomcat
-  storageClassName: local
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: db
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: tomcat
 spec:
   accessModes:
   - ReadWriteOnce
