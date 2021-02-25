@@ -4,12 +4,15 @@
 ################################################################################
 configs:
   proxy:
-    external: true
+    file: ./circabc-docker/proxy/conf/nginx/nginx.conf
+#    external: true
 secrets:
   db:
-    external: true
+    file: ./circabc-docker/mysql/init/setup.sql
+#    external: true
   proxy:
-    external: true
+    file: ./circabc-docker/proxy/conf/nginx/conf.d/default.conf
+#    external: true
 services:
   angular:
     deploy:
@@ -54,7 +57,7 @@ services:
     - 80
     image: academiaonline/nginx:8.2
     ports:
-    - 8080:80
+    - 30000:80
     secrets:
     - mode: 0400
       source: proxy
