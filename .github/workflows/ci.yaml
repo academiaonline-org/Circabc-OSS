@@ -68,8 +68,8 @@ jobs:                                                                          #
         ports="                                                                \
         "                                                                      ;
         volumes="                                                              \
-          -v ${PWD}/circabc-docker/mysql/init/setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro  \
-          -v /tmp/db:/var/lib/mysql \
+          -v ${PWD}/circabc-docker/mysql/init/setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro \
+          -v /tmp/db:/var/lib/mysql                                            \
         "                                                                      ;
         ########################################################################
         image=mysql:5.6                                                        ;
@@ -100,7 +100,7 @@ jobs:                                                                          #
         ports="                                                                \
         "                                                                      ;
         volumes="                                                              \
-          -v /tmp/tomcat:/usr/local/tomcat \
+          -v /tmp/tomcat:/usr/local/tomcat                                     \
         "                                                                      ;
         ########################################################################
         image=${repository}:${release}-testing-${name}                         ;
@@ -119,46 +119,57 @@ jobs:                                                                          #
         volumes="                                                              \
           -v ${PWD}/circabc-docker/proxy/conf/default.conf:/etc/nginx/conf.d/default.conf:ro \
           -v ${PWD}/circabc-docker/proxy/conf/nginx.conf:/etc/nginx/nginx.conf:ro \
-          -v nginx-cache:/var/cache/nginx \
-          -v nginx-run:/var/run \
+          -v nginx-cache:/var/cache/nginx                                      \
+          -v nginx-run:/var/run                                                \
         "                                                                      ;
         ########################################################################
-        image=academiaonline/nginx:8.2                                                     ;
+        image=academiaonline/nginx:8.2                                         ;
         ########################################################################
         _docker_run                                                            ;
         ########################################################################
         for app in angular db proxy tomcat                                     ;
         ########################################################################
-        app=angular
-        log='Configuration complete; ready for start up'
+        app=angular                                                            ;
+        log='Configuration complete; ready for start up'                       ;
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
             docker logs ${app} | grep ${log} && break                          ;
           done                                                                 ;
         ########################################################################
-        app=db
-        log='MySQL init process done. Ready for start up.'
+        app=db                                                                 ;
+        log='MySQL init process done. Ready for start up.'                     ;
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
             docker logs ${app} | grep ${log} && break                          ;
           done                                                                 ;
         ########################################################################
-        app=proxy
-        log='Configuration complete; ready for start up'
+        app=proxy                                                              ;
+        log='Configuration complete; ready for start up'                       ;
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
             docker logs ${app} | grep ${log} && break                          ;
           done                                                                 ;
         ########################################################################
-        app=tomcat
-        log='Server startup in [0-9]* ms'
+        app=tomcat                                                             ;
+        log='Server startup in [0-9]* ms'                                      ;
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
             docker logs ${app} | grep ${log} && break                          ;
+          done                                                                 ;
+        ########################################################################
+        app=proxy                                                              ;
+        log='<title>Circabc</title>'                                           ;
+        while true                                                             ;
+          do                                                                   \
+            sleep 10                                                           ;
+            docker exec ${app}                                                 \
+            curl localhost/ui/login                                            \
+            |                                                                  \
+            grep ${log} && break                                               ;
           done                                                                 ;
   ##############################################################################
   swarm:                                                                       #
@@ -218,9 +229,9 @@ jobs:                                                                          #
               done                                                             ;
           done                                                                 ;
   ##############################################################################
-  kubernetes:                                                                       #
+  kubernetes:                                                                  #
     env:                                                                       #
-      mode: kubernetes                                                              #
+      mode: kubernetes                                                         #
     runs-on: ubuntu-18.04                                                      #
     steps:                                                                     #
     - name: checkout                                                           #
@@ -283,18 +294,18 @@ jobs:                                                                          #
               done                                                             ;
           done                                                                 ;
         ########################################################################
-        for app in angular tomcat                                           ;
+        for app in angular tomcat                                              ;
           do                                                                   \
             while true                                                         ;
               do                                                               \
                 sleep 10                                                       ;
                 kubectl get svc                                                \
                 |                                                              \
-                grep "$app.*ClusterIP.*80/TCP" && break                      ;
+                grep "$app.*ClusterIP.*80/TCP" && break                        ;
               done                                                             ;
           done                                                                 ;
         ########################################################################
-        for app in db                                                       ;
+        for app in db                                                          ;
           do                                                                   \
             while true                                                         ;
               do                                                               \
@@ -305,43 +316,54 @@ jobs:                                                                          #
               done                                                             ;
           done                                                                 ;
         ########################################################################
-        app=angular
-        log='Configuration complete; ready for start up'
+        app=angular                                                            ;
+        log='Configuration complete; ready for start up'                       ;
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
-            kubectl logs deploy/${app}                                          \
+            kubectl logs deploy/${app}                                         \
             |                                                                  \
-            grep ${log} && break                         ;
+            grep ${log} && break                                               ;
           done                                                                 ;
         ########################################################################
-        app=db
-        log='MySQL init process done. Ready for start up.'
+        app=db                                                                 ;
+        log='MySQL init process done. Ready for start up.'                     ;
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
-            kubectl logs deploy/${app}                                          \
+            kubectl logs deploy/${app}                                         \
             |                                                                  \
-            grep ${log} && break                         ;
+            grep ${log} && break                                               ;
           done                                                                 ;
         ########################################################################
-        app=tomcat
-        log='Server startup in [0-9]* ms'
+        app=tomcat                                                             ;
+        log='Server startup in [0-9]* ms'                                      ;
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
-            kubectl logs deploy/${app}                                          \
+            kubectl logs deploy/${app}                                         \
             |                                                                  \
-            grep ${log} && break                         ;
+            grep ${log} && break                                               ;
           done                                                                 ;
         ########################################################################
-        app=proxy
-        log='Configuration complete; ready for start up'
+        app=proxy                                                              ;
+        log='Configuration complete; ready for start up'                       ;
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
-            kubectl logs ds/${app}                                          \
+            kubectl logs ds/${app}                                             \
             |                                                                  \
-            grep ${log} && break                         ;
+            grep ${log} && break                                               ;
+          done                                                                 ;
+        ########################################################################
+        app=proxy                                                              ;
+        log='<title>Circabc</title>'                                           ;
+        while true                                                             ;
+          do                                                                   \
+            sleep 10                                                           ;
+            kubectl exec ds/${app}                                             \
+            curl localhost/ui/login                                            \
+            |                                                                  \
+            grep ${log} && break                                               ;
           done                                                                 ;
 ################################################################################
