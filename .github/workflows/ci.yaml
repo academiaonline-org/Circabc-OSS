@@ -52,7 +52,7 @@ jobs:                                                                          #
                                                                                ;
           done                                                                 ;
         ########################################################################
-        for app in angular db db_admin proxy tomcat                            ;
+        for app in angular db proxy tomcat                                     ;
           do                                                                   \
             docker network create $app                                         ;
           done                                                                 ;
@@ -66,10 +66,10 @@ jobs:                                                                          #
         name=db                                                                ;
         network=db                                                             ;
         ports="                                                                \
-          -p 3306:3306                                                         \
         "                                                                      ;
         volumes="                                                              \
-          -v ${PWD}/circabc-docker/mysql/init:/docker-entrypoint-initdb.d/:ro  \
+          -v ${PWD}/circabc-docker/mysql/init/setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro  \
+          -v /tmp/db:/var/lib/mysql \
         "                                                                      ;
         ########################################################################
         image=mysql:5.6                                                        ;
@@ -79,30 +79,10 @@ jobs:                                                                          #
         command="                                                              \
         "                                                                      ;
         environment="                                                          \
-          -e PMA_ARBITRARY=1                                                   \
-          -e PMA_HOST=db                                                       \
-          -e PMA_PORT=3306                                                     \
         "                                                                      ;
-        name=db_admin                                                          ;
-        network=db_admin                                                       ;
+        name=angular                                                           ;
+        network=angular                                                        ;
         ports="                                                                \
-          -p 83:80                                                             \
-        "                                                                      ;
-        volumes="                                                              \
-        "                                                                      ;
-        ########################################################################
-        image=phpmyadmin/phpmyadmin                                            ;
-        ########################################################################
-        _docker_run                                                            ;
-        ########################################################################
-        command="                                                              \
-        "                                                                      ;
-        environment="                                                          \
-        "                                                                      ;
-        name=tomcat                                                            ;
-        network=tomcat                                                         ;
-        ports="                                                                \
-          -p 81:8080                                                           \
         "                                                                      ;
         volumes="                                                              \
         "                                                                      ;
@@ -115,12 +95,12 @@ jobs:                                                                          #
         "                                                                      ;
         environment="                                                          \
         "                                                                      ;
-        name=angular                                                           ;
-        network=angular                                                        ;
+        name=tomcat                                                            ;
+        network=tomcat                                                         ;
         ports="                                                                \
-          -p 82:80                                                             \
         "                                                                      ;
         volumes="                                                              \
+          -v /tmp/tomcat:/usr/local/tomcat \
         "                                                                      ;
         ########################################################################
         image=${repository}:${release}-testing-${name}                         ;
@@ -135,18 +115,49 @@ jobs:                                                                          #
         network=proxy                                                          ;
         ports="                                                                \
           -p 8080:80                                                           \
-          -p 8443:443                                                          \
         "                                                                      ;
         volumes="                                                              \
-          -v ${PWD}/circabc-docker/proxy/conf:/etc/nginx                       \
+          -v ${PWD}/circabc-docker/proxy/conf/default.conf:/etc/nginx/conf.d/default.conf:ro \
+          -v ${PWD}/circabc-docker/proxy/conf/nginx.conf:/etc/nginx/nginx.conf:ro \
+          -v nginx-cache:/var/cache/nginx \
+          -v nginx-run:/var/run \
         "                                                                      ;
         ########################################################################
-        image=nginx:alpine                                                     ;
+        image=academiaonline/nginx:8.2                                                     ;
         ########################################################################
         _docker_run                                                            ;
         ########################################################################
-        for app in angular db db_admin proxy tomcat                            ;
+        for app in angular db proxy tomcat                                     ;
+        ########################################################################
+        app=angular
+        log='Configuration complete; ready for start up'
+        while true                                                             ;
           do                                                                   \
-            docker logs $app
+            sleep 10                                                           ;
+            docker logs ${app} | grep ${log} && break                          ;
+          done                                                                 ;
+        ########################################################################
+        app=db
+        log='MySQL init process done. Ready for start up.'
+        while true                                                             ;
+          do                                                                   \
+            sleep 10                                                           ;
+            docker logs ${app} | grep ${log} && break                          ;
+          done                                                                 ;
+        ########################################################################
+        app=proxy
+        log='Configuration complete; ready for start up'
+        while true                                                             ;
+          do                                                                   \
+            sleep 10                                                           ;
+            docker logs ${app} | grep ${log} && break                          ;
+          done                                                                 ;
+        ########################################################################
+        app=tomcat
+        log='Server startup in [0-9]* ms'
+        while true                                                             ;
+          do                                                                   \
+            sleep 10                                                           ;
+            docker logs ${app} | grep ${log} && break                          ;
           done                                                                 ;
 ################################################################################
