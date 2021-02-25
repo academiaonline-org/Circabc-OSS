@@ -6,7 +6,15 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nginx.conf
+  name: db-args
+data:
+  args1: '--lower_case_table_names=1'
+  args2: '--transaction-isolation=READ-COMMITTED'
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: proxy
 data:
   nginx.conf: |
     user nginx;
@@ -17,28 +25,6 @@ data:
       worker_connections  1024;
     }
     include /etc/nginx/conf.d/*.conf;  
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: db-args
-data:
-  args1: '--lower_case_table_names=1'
-  args2: '--transaction-isolation=READ-COMMITTED'
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: db-init
-stringData:
-  setup.sql: |
-    CREATE USER 'alfresco' IDENTIFIED BY 'alfresco';
-    CREATE DATABASE alfresco DEFAULT CHARACTER SET utf8;
-    GRANT ALL ON alfresco.* TO 'alfresco';
-    CREATE USER 'circabc_audit' IDENTIFIED BY 'circabc_audit';
-    CREATE DATABASE circabc_audit DEFAULT CHARACTER SET utf8;
-    GRANT ALL ON circabc_audit.* TO 'circabc_audit';
-type: Opaque
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -60,28 +46,6 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
-          protocol: TCP        
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: tomcat
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: tomcat
-  template:
-    metadata:
-      labels:
-        app: tomcat
-    spec:
-      containers:
-      - name: tomcat
-        image: academiaonline/circabc-oss:latest-tomcat
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 8080
           protocol: TCP        
 ---
 apiVersion: apps/v1
@@ -141,83 +105,42 @@ spec:
             path: setup.sql
           secretName: db-init
 ---
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: db
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-  - ReadWriteOnce
-  hostPath:
-    path: /tmp/db
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: db
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: db
-stringData:
-  MYSQL_ROOT_PASSWORD: password
-type: Opaque
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: db_admin
+  name: db-admin
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: db_admin
+      app: db-admin
   template:
     metadata:
       labels:
-        app: db_admin
+        app: db-admin
     spec:
       containers:
-      - name: db_admin
+      - name: db-admin
         env:
         - name: PMA_ARBITRARY
           valueFrom:
             secretKeyRef:
               key: PMA_ARBITRARY
-              name: db_admin
+              name: db-admin
         - name: PMA_HOST
           valueFrom:
             secretKeyRef:
               key: PMA_HOST
-              name: db_admin
+              name: db-admin
         - name: PMA_PORT
           valueFrom:
             secretKeyRef:
               key: PMA_PORT
-              name: db_admin      
+              name: db-admin      
         image: phpmyadmin/phpmyadmin
         ports:
         - containerPort: 80
           protocol: TCP        
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: db_admin
-stringData:
-  PMA_ARBITRARY: 1
-  PMA_HOST: db
-  PMA_PORT: 3306
-type: Opaque
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -260,22 +183,133 @@ spec:
           items:
           - key: nginx.conf
             path: nginx.conf
-          name: nginx.conf
+          name: proxy
       - name: nginx-default
         secret:
           items:
           - key: default.conf
             path: default.conf
-          secretName: default.conf
+          secretName: proxy
       - name: nginx-cache
         emptyDir: {}
       - name: nginx-run
         emptyDir: {}          
 ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tomcat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tomcat
+  template:
+    metadata:
+      labels:
+        app: tomcat
+    spec:
+      containers:
+      - name: tomcat
+        image: academiaonline/circabc-oss:latest-tomcat
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        volumeMounts:
+        - 
+          mountPath: /usr/local/tomcat          
+          name: tomcat
+      volumes:
+      - 
+        name: tomcat
+        persistentVolumeClaim:
+          claimName: tomcat
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: db
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+  - ReadWriteOnce
+  hostPath:
+    path: /tmp/db
+  storageClassName: local
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: tomcat
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+  - ReadWriteOnce
+  hostPath:
+    path: /tmp/tomcat
+  storageClassName: local
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tomcat
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: default.conf
+  name: db
+stringData:
+  MYSQL_ROOT_PASSWORD: password
+type: Opaque
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-admin
+stringData:
+  PMA_ARBITRARY: 1
+  PMA_HOST: db
+  PMA_PORT: 3306
+type: Opaque
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-init
+stringData:
+  setup.sql: |
+    CREATE USER 'alfresco' IDENTIFIED BY 'alfresco';
+    CREATE DATABASE alfresco DEFAULT CHARACTER SET utf8;
+    GRANT ALL ON alfresco.* TO 'alfresco';
+    CREATE USER 'circabc_audit' IDENTIFIED BY 'circabc_audit';
+    CREATE DATABASE circabc_audit DEFAULT CHARACTER SET utf8;
+    GRANT ALL ON circabc_audit.* TO 'circabc_audit';
+type: Opaque
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: proxy
 stringData:
   default.conf: |
     http {
@@ -328,25 +362,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: tomcat
-spec:
-  ports:
-  - port: 8080
-    targetPort: 8080
-  selector:
-    app: tomcat
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: db_admin
+  name: db-admin
 spec:
   ports:
   - port: 80
     targetPort: 80
   selector:
-    app: db_admin
+    app: db-admin
   type: ClusterIP
 ---
 apiVersion: v1
@@ -364,4 +386,23 @@ spec:
   selector:
     app: proxy
 #  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tomcat
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: tomcat
+  type: ClusterIP
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
 ---
