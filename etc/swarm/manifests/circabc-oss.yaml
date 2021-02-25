@@ -51,8 +51,6 @@ services:
     expose:
     - 8080
     image: academiaonline/circabc-oss:latest-tomcat
-    volumes:
-    - /tmp/tomcat:/usr/local/tomcat
 version: "3.8"
 volumes:
   nginx-cache:
