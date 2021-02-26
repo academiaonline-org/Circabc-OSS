@@ -3,14 +3,6 @@
 #      SPDX-License-Identifier:  GPL-2.0-only                                  #
 ################################################################################
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: db-args
-data:
-  args1: '--lower_case_table_names=1'
-  args2: '--transaction-isolation=READ-COMMITTED'
----
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -107,18 +99,18 @@ spec:
         - name: MYSQL_ARG_1
           valueFrom:
             configMapKeyRef:
-              key: args1
-              name: db-args
+              key: db-args-1
+              name: db-args-1
         - name: MYSQL_ARG_2
           valueFrom:
             configMapKeyRef:
-              key: args2
-              name: db-args
+              key: db-args-2
+              name: db-args-2
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              key: MYSQL_ROOT_PASSWORD
-              name: db
+              key: mysql-root-password
+              name: mysql-root-password
         image: mysql:5.6
         ports:
         - containerPort: 3306
@@ -186,14 +178,6 @@ spec:
   resources:
     requests:
       storage: 1Gi
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: db
-stringData:
-  MYSQL_ROOT_PASSWORD: password
-type: Opaque
 ---
 apiVersion: v1
 kind: Service
