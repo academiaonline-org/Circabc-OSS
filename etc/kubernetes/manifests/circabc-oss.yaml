@@ -124,8 +124,9 @@ spec:
           subPath: setup.sql          
       volumes:
       - name: db
-        persistentVolumeClaim:
-          claimName: db
+        emptyDir: {}
+ #       persistentVolumeClaim:
+ #         claimName: db
       - name: db-init
         secret:
           items:
@@ -155,29 +156,29 @@ spec:
         - containerPort: 8080
           protocol: TCP
 ---
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: db
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-  - ReadWriteOnce
-  hostPath:
-    path: /tmp/db
-  storageClassName: local
+#apiVersion: v1
+#kind: PersistentVolume
+#metadata:
+#  name: db
+#spec:
+#  capacity:
+#    storage: 1Gi
+#  accessModes:
+#  - ReadWriteOnce
+#  hostPath:#
+#    path: /tmp/db
+#  storageClassName: local
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: db
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
+#apiVersion: v1
+#kind: PersistentVolumeClaim
+#metadata:
+#  name: db
+#spec:
+#  accessModes:
+#  - ReadWriteOnce
+#  resources:
+#    requests:
+#      storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
@@ -215,10 +216,10 @@ spec:
     app: tomcat
   type: ClusterIP
 ---
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: local
-provisioner: kubernetes.io/no-provisioner
-volumeBindingMode: WaitForFirstConsumer
+#apiVersion: storage.k8s.io/v1
+#kind: StorageClass
+#metadata:
+#  name: local
+#provisioner: kubernetes.io/no-provisioner
+#volumeBindingMode: WaitForFirstConsumer
 ---
