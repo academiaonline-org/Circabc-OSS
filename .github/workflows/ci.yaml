@@ -120,7 +120,7 @@ jobs:                                                                          #
         "                                                                      ;
         volumes="                                                              \
           -v /run/secrets/proxy/${default}:/etc/${default}:ro                  \
-          -v /run/configs/proxy/conf/${nginx}:/etc/${nginx}:ro                 \
+          -v /run/configs/proxy/${nginx}:/etc/${nginx}:ro                      \
           -v nginx-cache:/var/cache/nginx                                      \
           -v nginx-run:/var/run                                                \
         "                                                                      ;
