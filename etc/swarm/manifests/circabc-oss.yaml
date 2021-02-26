@@ -4,14 +4,16 @@
 ################################################################################
 configs:
   nginx.conf:
-    file: /run/configs/Circabc-OSS/proxy/conf/nginx/nginx.conf
+    file: /run/configs/proxy/nginx/nginx.conf
 #    external: true
 secrets:
-  setup.sql:
-    file: /run/secrets/Circabc-OSS/mysql/init/setup.sql
-#    external: true
   default.conf:
-    file: /run/secrets/Circabc-OSS/proxy/conf/nginx/conf.d/default.conf
+    file: /run/secrets/proxy/nginx/conf.d/default.conf
+#    external: true
+  mysql-root-password:
+    file: /run/secrets/db/mysql-root-password
+  setup.sql:
+    file: /run/secrets/db/mysql/init/setup.sql
 #    external: true
 services:
   angular:
@@ -33,11 +35,14 @@ services:
         - node.role == worker
       replicas: 1    
     environment:
-    - MYSQL_ROOT_PASSWORD=password
+    - MYSQL_ROOT_PASSWORD_FILE=/etc/mysql/mysql-root-password
     expose:
     - 3306
     image: mysql:5.6
     secrets:
+    - mode: 0400
+      source: mysql-root-password
+      target: /etc/mysql/mysql-root-password
     - mode: 0400
       source: setup.sql
       target: /docker-entrypoint-initdb.d/setup.sql
