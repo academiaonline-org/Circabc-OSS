@@ -290,6 +290,7 @@ jobs:                                                                          #
         sed -i /imagePullPolicy/s/Always/Never/ $compose                       ;
         kubectl apply -f $compose                                              ;
         ########################################################################
+        while true;do sleep 10;kubectl get cm;kubectl get secret;kubeclt get all;done
         for app in angular db tomcat                                           ;
           do                                                                   \
             while true                                                         ;
