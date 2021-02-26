@@ -161,6 +161,7 @@ jobs:                                                                          #
         ########################################################################
         app=tomcat                                                             ;
         log='Server startup in [0-9]* ms'                                      ;
+        docker logs ${app} -f
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
