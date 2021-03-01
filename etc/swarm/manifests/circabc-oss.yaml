@@ -54,7 +54,7 @@ services:
       source: nginx.conf
       target: /etc/nginx/nginx.conf  
     deploy:
-      mode: global
+#      mode: global
       placement:
         constraints:
         - node.role == worker
