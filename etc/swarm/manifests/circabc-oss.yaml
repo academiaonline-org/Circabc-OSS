@@ -43,7 +43,7 @@ services:
     - mode: 0400
       source: mysql-root-password
       target: /etc/mysql/mysql-root-password
-    - mode: 0400
+    - mode: 0444
       source: setup.sql
       target: /docker-entrypoint-initdb.d/setup.sql
     volumes:
