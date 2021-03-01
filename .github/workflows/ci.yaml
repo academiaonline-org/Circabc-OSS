@@ -247,6 +247,7 @@ jobs:                                                                          #
           do                                                                   \
             sleep 10                                                           ;
             docker service logs ${project}_${app}                              \
+              2>& 1                                                            \
             |                                                                  \
             grep "${log}" && break                                             ;
           done                                                                 ;
@@ -257,6 +258,7 @@ jobs:                                                                          #
           do                                                                   \
             sleep 10                                                           ;
             docker service logs ${project}_${app}                              \
+              2>& 1                                                            \
             |                                                                  \
             grep "${log}" && break                                             ;
           done                                                                 ;
@@ -267,6 +269,7 @@ jobs:                                                                          #
           do                                                                   \
             sleep 10                                                           ;
             docker service logs ${project}_${app}                              \
+              2>& 1                                                            \
             |                                                                  \
             grep "${log}" && break                                             ;
           done                                                                 ;
@@ -277,6 +280,7 @@ jobs:                                                                          #
           do                                                                   \
             sleep 10                                                           ;
             docker service logs ${project}_${app}                              \
+              2>& 1                                                            \
             |                                                                  \
             grep "${log}" && break                                             ;
           done                                                                 ;
