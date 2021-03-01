@@ -11,176 +11,176 @@ on:                                                                            #
     branches:                                                                  #
     - docker                                                                   #
 jobs:                                                                          #
-  docker:                                                                      #
-    runs-on: ubuntu-18.04                                                      #
-    steps:                                                                     #
-    - name: checkout                                                           #
-      uses: actions/checkout@v2                                                #
-    - name: test                                                               #
-      run: |                                                                   #
-        set -x                                                                 ;
-        ########################################################################
-        function _docker_run {                                                 \
-          docker run                                                           \
-            -d                                                                 \
-            ${environment}                                                     \
-            --name ${name}                                                     \
-            --network ${network}                                               \
-            ${ports}                                                           \
-            ${volumes}                                                         \
-            ${image}                                                           \
-            ${command}                                                         \
-                                                                               ;
-        }                                                                      ;
-        ########################################################################
-        branch=$( basename ${GITHUB_REF} )                                     ;
-        project=$( basename ${GITHUB_REPOSITORY} | tr A-Z a-z )                ;
-        repository=$( echo ${GITHUB_REPOSITORY} | tr A-Z a-z )                 ;
-        ########################################################################
-        sudo cp -rv run/* /run                                                 ;
-        ########################################################################
-        echo $branch | grep ^v[0-9]                                            \
-          && release=$( echo $branch | awk -F^v '{ print $2 }' )               \
-          || release=latest                                                    ;
-        ########################################################################
-        for app in angular tomcat                                              ;
-          do                                                                   \
-            docker build                                                       \
-              --file Dockerfile.${app}                                         \
-              --tag ${repository}:${release}-testing-${app}                    \
-              ${PWD}                                                           \
-                                                                               ;
-          done                                                                 ;
-        ########################################################################
-        for app in angular db proxy tomcat                                     ;
-          do                                                                   \
-            docker network create $app                                         ;
-          done                                                                 ;
-        ########################################################################
-        command="                                                              \
-          --lower_case_table_names=1 --transaction-isolation=READ-COMMITTED    \
-        "                                                                      ;
-        environment="                                                          \
-          -e MYSQL_ROOT_PASSWORD=password                                      \
-        "                                                                      ;
-        name=db                                                                ;
-        network=db                                                             ;
-        ports="                                                                \
-        "                                                                      ;
-        volumes="                                                              \
-          -v /run/secrets/db/mysql/init/setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro \
-          -v /tmp/db:/var/lib/mysql                                            \
-        "                                                                      ;
-        ########################################################################
-        image=mysql:5.6                                                        ;
-        ########################################################################
-        _docker_run                                                            ;
-        ########################################################################
-        command="                                                              \
-        "                                                                      ;
-        environment="                                                          \
-        "                                                                      ;
-        name=angular                                                           ;
-        network=angular                                                        ;
-        ports="                                                                \
-        "                                                                      ;
-        volumes="                                                              \
-        "                                                                      ;
-        ########################################################################
-        image=${repository}:${release}-testing-${name}                         ;
-        ########################################################################
-        _docker_run                                                            ;
-        ########################################################################
-        command="                                                              \
-        "                                                                      ;
-        environment="                                                          \
-        "                                                                      ;
-        name=tomcat                                                            ;
-        network=tomcat                                                         ;
-        ports="                                                                \
-        "                                                                      ;
-        volumes="                                                              \
-        "                                                                      ;
-        ########################################################################
-        image=${repository}:${release}-testing-${name}                         ;
-        ########################################################################
-        _docker_run                                                            ;
-        ########################################################################
-        default=nginx/conf.d/default.conf                                      ;
-        nginx=nginx/nginx.conf                                                 ;
-        ########################################################################
-        command="                                                              \
-        "                                                                      ;
-        environment="                                                          \
-        "                                                                      ;
-        name=proxy                                                             ;
-        network=proxy                                                          ;
-        ports="                                                                \
-          -p 8080:80                                                           \
-        "                                                                      ;
-        volumes="                                                              \
-          -v /run/secrets/proxy/${default}:/etc/${default}:ro                  \
-          -v /run/configs/proxy/${nginx}:/etc/${nginx}:ro                      \
-          -v nginx-cache:/var/cache/nginx                                      \
-          -v nginx-run:/var/run                                                \
-        "                                                                      ;
-        ########################################################################
-        image=academiaonline/nginx:8.2                                         ;
-        ########################################################################
-        _docker_run                                                            ;
-        ########################################################################
-        app=angular                                                            ;
-        log='Configuration complete; ready for start up'                       ;
-        while true                                                             ;
-          do                                                                   \
-            sleep 10                                                           ;
-            docker logs ${app}                                                 \
-            |                                                                  \
-            grep "${log}" && break                                             ;
-          done                                                                 ;
-        ########################################################################
-        app=db                                                                 ;
-        log='MySQL init process done. Ready for start up.'                     ;
-        while true                                                             ;
-          do                                                                   \
-            sleep 10                                                           ;
-            docker logs ${app}                                                 \
-            |                                                                  \
-            grep "${log}" && break                                             ;
-          done                                                                 ;
-        ########################################################################
-        app=proxy                                                              ;
-        log='Configuration complete; ready for start up'                       ;
-        while true                                                             ;
-          do                                                                   \
-            sleep 10                                                           ;
-            docker logs ${app}                                                 \
-            |                                                                  \
-            grep "${log}" && break                                             ;
-          done                                                                 ;
-        ########################################################################
-        app=tomcat                                                             ;
-        log='Server startup in [0-9]* ms'                                      ;
-        docker logs ${app} -f
-        while true                                                             ;
-          do                                                                   \
-            sleep 10                                                           ;
-            docker logs ${app}                                                 \
-            |                                                                  \
-            grep "${log}" && break                                             ;
-          done                                                                 ;
-        ########################################################################
-        app=proxy                                                              ;
-        log='<title>Circabc</title>'                                           ;
-        while true                                                             ;
-          do                                                                   \
-            sleep 10                                                           ;
-            docker exec ${app}                                                 \
-            curl localhost/ui/login                                            \
-            |                                                                  \
-            grep "${log}" && break                                             ;
-          done                                                                 ;
-  ##############################################################################
+#  docker:                                                                      #
+#    runs-on: ubuntu-18.04                                                      #
+#    steps:                                                                     #
+#    - name: checkout                                                           #
+#      uses: actions/checkout@v2                                                #
+#    - name: test                                                               #
+#      run: |                                                                   #
+#        set -x                                                                 ;
+#        ########################################################################
+#        function _docker_run {                                                 \
+#          docker run                                                           \
+#            -d                                                                 \
+#            ${environment}                                                     \
+#            --name ${name}                                                     \
+#            --network ${network}                                               \
+#            ${ports}                                                           \
+#            ${volumes}                                                         \
+#            ${image}                                                           \
+#            ${command}                                                         \
+#                                                                               ;
+#        }                                                                      ;
+#        ########################################################################
+#        branch=$( basename ${GITHUB_REF} )                                     ;
+#        project=$( basename ${GITHUB_REPOSITORY} | tr A-Z a-z )                ;
+#        repository=$( echo ${GITHUB_REPOSITORY} | tr A-Z a-z )                 ;
+#        ########################################################################
+#        sudo cp -rv run/* /run                                                 ;
+#        ########################################################################
+#        echo $branch | grep ^v[0-9]                                            \
+#          && release=$( echo $branch | awk -F^v '{ print $2 }' )               \
+#          || release=latest                                                    ;
+#        ########################################################################
+#        for app in angular tomcat                                              ;
+#          do                                                                   \
+#            docker build                                                       \
+#              --file Dockerfile.${app}                                         \
+#              --tag ${repository}:${release}-testing-${app}                    \
+#              ${PWD}                                                           \
+#                                                                               ;
+#          done                                                                 ;
+#        ########################################################################
+#        for app in angular db proxy tomcat                                     ;
+#          do                                                                   \
+#            docker network create $app                                         ;
+#          done                                                                 ;
+#        ########################################################################
+#        command="                                                              \
+#          --lower_case_table_names=1 --transaction-isolation=READ-COMMITTED    \
+#        "                                                                      ;
+#        environment="                                                          \
+#          -e MYSQL_ROOT_PASSWORD=password                                      \
+#        "                                                                      ;
+#        name=db                                                                ;
+#        network=db                                                             ;
+#        ports="                                                                \
+#        "                                                                      ;
+#        volumes="                                                              \
+#          -v /run/secrets/db/mysql/init/setup.sql:/docker-entrypoint-initdb.d/setup.sql:ro \
+#          -v /tmp/db:/var/lib/mysql                                            \
+#        "                                                                      ;
+#        ########################################################################
+#        image=mysql:5.6                                                        ;
+#        ########################################################################
+#        _docker_run                                                            ;
+#        ########################################################################
+#        command="                                                              \
+#        "                                                                      ;
+#        environment="                                                          \
+#        "                                                                      ;
+#        name=angular                                                           ;
+#        network=angular                                                        ;
+#        ports="                                                                \
+#        "                                                                      ;
+#        volumes="                                                              \
+#        "                                                                      ;
+#        ########################################################################
+#        image=${repository}:${release}-testing-${name}                         ;
+#        ########################################################################
+#        _docker_run                                                            ;
+#        ########################################################################
+#        command="                                                              \
+#        "                                                                      ;
+#        environment="                                                          \
+#        "                                                                      ;
+#        name=tomcat                                                            ;
+#        network=tomcat                                                         ;
+#        ports="                                                                \
+#        "                                                                      ;
+#        volumes="                                                              \
+#        "                                                                      ;
+#        ########################################################################
+#        image=${repository}:${release}-testing-${name}                         ;
+#        ########################################################################
+#        _docker_run                                                            ;
+#        ########################################################################
+#        default=nginx/conf.d/default.conf                                      ;
+#        nginx=nginx/nginx.conf                                                 ;
+#        ########################################################################
+#        command="                                                              \
+#        "                                                                      ;
+#        environment="                                                          \
+#        "                                                                      ;
+#        name=proxy                                                             ;
+#        network=proxy                                                          ;
+#        ports="                                                                \
+#          -p 8080:80                                                           \
+#        "                                                                      ;
+#        volumes="                                                              \
+#          -v /run/secrets/proxy/${default}:/etc/${default}:ro                  \
+#          -v /run/configs/proxy/${nginx}:/etc/${nginx}:ro                      \
+#          -v nginx-cache:/var/cache/nginx                                      \
+#          -v nginx-run:/var/run                                                \
+#        "                                                                      ;
+#        ########################################################################
+#        image=academiaonline/nginx:8.2                                         ;
+#        ########################################################################
+#        _docker_run                                                            ;
+#        ########################################################################
+#        app=angular                                                            ;
+#        log='Configuration complete; ready for start up'                       ;
+#        while true                                                             ;
+#          do                                                                   \
+#            sleep 10                                                           ;
+#            docker logs ${app}                                                 \
+#            |                                                                  \
+#            grep "${log}" && break                                             ;
+#          done                                                                 ;
+#        ########################################################################
+#        app=db                                                                 ;
+#        log='MySQL init process done. Ready for start up.'                     ;
+#        while true                                                             ;
+#          do                                                                   \
+#            sleep 10                                                           ;
+#            docker logs ${app}                                                 \
+#            |                                                                  \
+#            grep "${log}" && break                                             ;
+#          done                                                                 ;
+#        ########################################################################
+#        app=proxy                                                              ;
+#        log='Configuration complete; ready for start up'                       ;
+#        while true                                                             ;
+#          do                                                                   \
+#            sleep 10                                                           ;
+#            docker logs ${app}                                                 \
+#            |                                                                  \
+#            grep "${log}" && break                                             ;
+#          done                                                                 ;
+#        ########################################################################
+#        app=tomcat                                                             ;
+#        log='Server startup in [0-9]* ms'                                      ;
+#        docker logs ${app} -f
+#        while true                                                             ;
+#          do                                                                   \
+#            sleep 10                                                           ;
+#            docker logs ${app}                                                 \
+#            |                                                                  \
+#            grep "${log}" && break                                             ;
+#          done                                                                 ;
+#        ########################################################################
+#        app=proxy                                                              ;
+#        log='<title>Circabc</title>'                                           ;
+#        while true                                                             ;
+#          do                                                                   \
+#            sleep 10                                                           ;
+#            docker exec ${app}                                                 \
+#            curl localhost/ui/login                                            \
+#            |                                                                  \
+#            grep "${log}" && break                                             ;
+#          done                                                                 ;
+#  ##############################################################################
   swarm:                                                                       #
     env:                                                                       #
       mode: swarm                                                              #
@@ -236,105 +236,8 @@ jobs:                                                                          #
                 sleep 10                                                       ;
                 docker service ls                                              \
                 |                                                              \
-                grep "$app.*global.*\([0-9]\)/\1" && break                     ;
-              done                                                             ;
-          done                                                                 ;
-  ##############################################################################
-  kubernetes:                                                                  #
-    env:                                                                       #
-      mode: kubernetes                                                         #
-    runs-on: ubuntu-18.04                                                      #
-    steps:                                                                     #
-    - name: checkout                                                           #
-      uses: actions/checkout@v2                                                #
-    - name: test                                                               #
-      run: |                                                                   #
-        set -x                                                                 ;
-        ########################################################################
-        branch=$( basename ${GITHUB_REF} )                                     ;
-        project=$( basename ${GITHUB_REPOSITORY} | tr A-Z a-z )                ;
-        repository=$( echo ${GITHUB_REPOSITORY} | tr A-Z a-z )                 ;
-        ########################################################################
-        sudo cp -rv run/* /run                                                 ;
-        ########################################################################
-        echo $branch | grep ^v[0-9]                                            \
-          && release=$( echo $branch | awk -F^v '{ print $2 }' )               \
-          || release=latest                                                    ;
-        ########################################################################
-        compose=etc/$mode/manifests/$project.yaml                              ;
-        sed -i /image:.*$project/s/$release/$release-testing/ $compose         ;
-        ########################################################################
-        for app in angular tomcat                                              ;
-          do                                                                   \
-            docker build                                                       \
-              --file Dockerfile.${app}                                         \
-              --tag ${repository}:${release}-testing-${app}                    \
-              ${PWD}                                                           \
-                                                                               ;
-          done                                                                 ;
-        ########################################################################
-        uuid=$( md5sum $compose | cut -d\  -f1 )                               ;
-        git clone                                                              \
-          --single-branch --branch                                             \
-            v1.2                                                               \
-          https://github.com/academiaonline/kubernetes $uuid                   ;
-        path=$uuid/bin/cluster/ubuntu18/install-docker-kubelet.sh              ;
-        source $path                                                           ;
-        path=$uuid/bin/cluster/ubuntu18/install-leader.sh                      ;
-        source $path                                                           ;
-        master=$( kubectl get node | grep master | awk '{ print $1 }' )        ;
-        kubectl taint node $master node-role.kubernetes.io/master:NoSchedule-  ;
-        path=$uuid/bin/configs-secrets-gen.sh                                  ;
-        source $path                                                           ;
-        rm -rf $uuid                                                           ;
-        ########################################################################
-        sed -i /imagePullPolicy/s/Always/Never/ $compose                       ;
-        kubectl apply -f $compose                                              ;
-        ########################################################################
-        while true;do sleep 10;kubectl describe cm;kubectl describe secret;kubectl describe all;done
-        
-        
-        for app in angular db tomcat                                           ;
-          do                                                                   \
-            while true                                                         ;
-              do                                                               \
-                sleep 10                                                       ;
-                kubectl get deploy                                             \
-                |                                                              \
-                grep "$app.*\([0-9]\)/\1" && break                             ;
-              done                                                             ;
-          done                                                                 ;
-        ########################################################################
-        for app in proxy                                                       ;
-          do                                                                   \
-            while true                                                         ;
-              do                                                               \
-                sleep 10                                                       ;
-                kubectl get ds                                                 \
-                |                                                              \
-                grep "$app.*1.*1.*1.*1.*1" && break                            ;
-              done                                                             ;
-          done                                                                 ;
-        ########################################################################
-        for app in angular tomcat                                              ;
-          do                                                                   \
-            while true                                                         ;
-              do                                                               \
-                sleep 10                                                       ;
-                kubectl get svc                                                \
-                |                                                              \
-                grep "$app.*ClusterIP.*80/TCP" && break                        ;
-              done                                                             ;
-          done                                                                 ;
-        ########################################################################
-        for app in db                                                          ;
-          do                                                                   \
-            while true                                                         ;
-              do                                                               \
-                sleep 10                                                       ;
-                kubectl get svc                                                \
-                |                                                              \
-                grep "$app.*ClusterIP.*3306/TCP" && break                      ;
+                grep "$app.*replicated.*\([0-9]\)/\1" && break                 ;
+#               grep "$app.*global.*\([0-9]\)/\1" && break                     ;
               done                                                             ;
           done                                                                 ;
         ########################################################################
@@ -343,7 +246,7 @@ jobs:                                                                          #
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
-            kubectl logs deploy/${app}                                         \
+            docker service logs ${project}_${app}                              \
             |                                                                  \
             grep "${log}" && break                                             ;
           done                                                                 ;
@@ -353,7 +256,7 @@ jobs:                                                                          #
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
-            kubectl logs deploy/${app}                                         \
+            docker service logs ${project}_${app}                              \
             |                                                                  \
             grep "${log}" && break                                             ;
           done                                                                 ;
@@ -363,7 +266,7 @@ jobs:                                                                          #
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
-            kubectl logs deploy/${app}                                         \
+            docker service logs ${project}_${app}                              \
             |                                                                  \
             grep "${log}" && break                                             ;
           done                                                                 ;
@@ -373,19 +276,157 @@ jobs:                                                                          #
         while true                                                             ;
           do                                                                   \
             sleep 10                                                           ;
-            kubectl logs ds/${app}                                             \
+            docker service logs ${project}_${app}                              \
             |                                                                  \
             grep "${log}" && break                                             ;
           done                                                                 ;
-        ########################################################################
-        app=proxy                                                              ;
-        log='<title>Circabc</title>'                                           ;
-        while true                                                             ;
-          do                                                                   \
-            sleep 10                                                           ;
-            kubectl exec ds/${app}                                             \
-            curl localhost/ui/login                                            \
-            |                                                                  \
-            grep "${log}" && break                                             ;
-          done                                                                 ;
+  ##############################################################################
+#  kubernetes:                                                                  #
+#    env:                                                                       #
+#      mode: kubernetes                                                         #
+#    runs-on: ubuntu-18.04                                                      #
+#    steps:                                                                     #
+#    - name: checkout                                                           #
+#      uses: actions/checkout@v2                                                #
+#    - name: test                                                               #
+#      run: |                                                                   #
+#        set -x                                                                 ;
+#        ########################################################################
+#        branch=$( basename ${GITHUB_REF} )                                     ;
+#        project=$( basename ${GITHUB_REPOSITORY} | tr A-Z a-z )                ;
+#        repository=$( echo ${GITHUB_REPOSITORY} | tr A-Z a-z )                 ;
+#        ########################################################################
+#        sudo cp -rv run/* /run                                                 ;
+#        ########################################################################
+#        echo $branch | grep ^v[0-9]                                            \
+#          && release=$( echo $branch | awk -F^v '{ print $2 }' )               \
+#          || release=latest                                                    ;
+#        ########################################################################
+#        compose=etc/$mode/manifests/$project.yaml                              ;
+#        sed -i /image:.*$project/s/$release/$release-testing/ $compose         ;
+#        ########################################################################
+#        for app in angular tomcat                                              ;
+#          do                                                                   \
+#            docker build                                                       \
+#              --file Dockerfile.${app}                                         \
+#              --tag ${repository}:${release}-testing-${app}                    \
+#              ${PWD}                                                           \
+#                                                                               ;
+#          done                                                                 ;
+#        ########################################################################
+#        uuid=$( md5sum $compose | cut -d\  -f1 )                               ;
+#        git clone                                                              \
+#          --single-branch --branch                                             \
+#            v1.2                                                               \
+#          https://github.com/academiaonline/kubernetes $uuid                   ;
+#        path=$uuid/bin/cluster/ubuntu18/install-docker-kubelet.sh              ;
+#        source $path                                                           ;
+#        path=$uuid/bin/cluster/ubuntu18/install-leader.sh                      ;
+#        source $path                                                           ;
+#        master=$( kubectl get node | grep master | awk '{ print $1 }' )        ;
+#        kubectl taint node $master node-role.kubernetes.io/master:NoSchedule-  ;
+#        path=$uuid/bin/configs-secrets-gen.sh                                  ;
+#        source $path                                                           ;
+#        rm -rf $uuid                                                           ;
+#        ########################################################################
+#        sed -i /imagePullPolicy/s/Always/Never/ $compose                       ;
+#        kubectl apply -f $compose                                              ;
+#        ########################################################################
+#        while true;do sleep 10;kubectl describe cm;kubectl describe secret;kubectl describe all;done
+#        
+#        
+#        for app in angular db tomcat                                           ;
+#          do                                                                   \
+#            while true                                                         ;
+#              do                                                               \
+#                sleep 10                                                       ;
+#                kubectl get deploy                                             \
+#                |                                                              \
+#                grep "$app.*\([0-9]\)/\1" && break                             ;
+#              done                                                             ;
+#          done                                                                 ;
+#        ########################################################################
+#        for app in proxy                                                       ;
+#          do                                                                   \
+#            while true                                                         ;
+#              do                                                               \
+#                sleep 10                                                       ;
+#                kubectl get ds                                                 \
+#                |                                                              \
+#                grep "$app.*1.*1.*1.*1.*1" && break                            ;
+#              done                                                             ;
+#          done                                                                 ;
+#        ########################################################################
+#        for app in angular tomcat                                              ;
+#          do                                                                   \
+#            while true                                                         ;
+#              do                                                               \
+#                sleep 10                                                       ;
+#                kubectl get svc                                                \
+#                |                                                              \
+#                grep "$app.*ClusterIP.*80/TCP" && break                        ;
+#              done                                                             ;
+#          done                                                                 ;
+#        ########################################################################
+#        for app in db                                                          ;
+#          do                                                                   \
+#            while true                                                         ;
+#              do                                                               \
+#                sleep 10                                                       ;
+#                kubectl get svc                                                \
+#                |                                                              \
+#                grep "$app.*ClusterIP.*3306/TCP" && break                      ;
+#              done                                                             ;
+#          done                                                                 ;
+#        ########################################################################
+#        app=angular                                                            ;
+#        log='Configuration complete; ready for start up'                       ;
+#        while true                                                             ;
+#          do                                                                   \
+#            sleep 10                                                           ;
+#            kubectl logs deploy/${app}                                         \
+#            |                                                                  \
+#            grep "${log}" && break                                             ;
+#          done                                                                 ;
+#        ########################################################################
+#        app=db                                                                 ;
+#        log='MySQL init process done. Ready for start up.'                     ;
+#        while true                                                             ;
+#          do                                                                   \
+#            sleep 10                                                           ;
+#            kubectl logs deploy/${app}                                         \
+#            |                                                                  \
+#            grep "${log}" && break                                             ;
+#          done                                                                 ;
+#        ########################################################################
+#        app=tomcat                                                             ;
+#        log='Server startup in [0-9]* ms'                                      ;
+#        while true                                                             ;
+#          do                                                                   \
+#            sleep 10                                                           ;
+#            kubectl logs deploy/${app}                                         \
+#            |                                                                  \
+#            grep "${log}" && break                                             ;
+#          done                                                                 ;
+#        ########################################################################
+#        app=proxy                                                              ;
+#        log='Configuration complete; ready for start up'                       ;
+#        while true                                                             ;
+#          do                                                                   \
+#            sleep 10                                                           ;
+#            kubectl logs ds/${app}                                             \
+#            |                                                                  \
+#            grep "${log}" && break                                             ;
+#          done                                                                 ;
+#        ########################################################################
+#        app=proxy                                                              ;
+#        log='<title>Circabc</title>'                                           ;
+#        while true                                                             ;
+#          do                                                                   \
+#            sleep 10                                                           ;
+#            kubectl exec ds/${app}                                             \
+#            curl localhost/ui/login                                            \
+#            |                                                                  \
+#            grep "${log}" && break                                             ;
+#          done                                                                 ;
 ################################################################################
