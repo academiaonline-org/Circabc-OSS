@@ -1,0 +1,67 @@
+#################################################################################
+#       Copyright (C) 2020        Sebastian Francisco Colomar Bauza             #
+#       SPDX-License-Identifier:  GPL-2.0-only                                  #
+#################################################################################
+FROM 										\
+	academiaonline/circabc-oss:latest-maven                                 \
+	AS 									\
+	build
+#################################################################################
+ARG 										\
+	dir_build=/build
+ARG 										\
+	folder_tomcat=circabc-docker/tomcat
+WORKDIR 									\
+	${dir_build}
+RUN 										\
+	ls 									\
+	${dir_build}/${folder_tomcat}/dist/circabc.war 				\
+	${dir_build}/${folder_tomcat}/lib/ecas-weblogic-12.2.1-authprovider-4.26.3.jar \
+	${dir_build}/${folder_tomcat}/lib/mysql-connector-java-5.1.48.jar 	\
+	${dir_build}/${folder_tomcat}/conf/context.xml 				\
+	${dir_build}/${folder_tomcat}/wait-for-it.sh 				\
+										;
+#################################################################################
+FROM 										\
+	tomcat:8.5.41-jdk8@sha256:08f16a194f14053d53f5bdbd1c09d871f6e7e680019cda86bb93ed02d84e7758 \
+	AS 									\
+	production
+#################################################################################
+ARG 										\
+	dir_app=/usr/local/tomcat
+ARG 										\
+	dir_build=/build
+ARG 										\
+	folder_tomcat=circabc-docker/tomcat
+WORKDIR 									\
+	${dir_app}
+RUN 										\
+	rm -rf 									\
+		webapps/ROOT 							\
+		webapps/examples 						\
+		webapps/manager 						\
+										;
+COPY 										\
+	--from=build 								\
+	${dir_build}/${folder_tomcat}/dist/circabc.war 				\
+	webapps/ROOT.war
+COPY 										\
+	--from=build 								\
+	${dir_build}/${folder_tomcat}/lib/ecas-weblogic-12.2.1-authprovider-4.26.3.jar \
+	lib/
+COPY 										\
+	--from=build 								\
+	${dir_build}/${folder_tomcat}/lib/mysql-connector-java-5.1.48.jar 	\
+	lib/
+COPY 										\
+	--from=build 								\
+	${dir_build}/${folder_tomcat}/conf/context.xml 				\
+	conf/
+COPY 										\
+	--from=build 								\
+	${dir_build}/${folder_tomcat}/wait-for-it.sh 				\
+	.
+#################################################################################
+CMD 										\
+	["./wait-for-it.sh","db:3306","--timeout=0","--strict","--","catalina.sh","run"]
+#################################################################################
