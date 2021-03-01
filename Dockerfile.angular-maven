@@ -16,7 +16,7 @@ ARG 										\
 WORKDIR 									\
 	${dir_build}
 RUN 										\
-  ls                                                                            \
+	ls 									\
 	${dir_build}/${folder_angular}/dist/circabc/ 				\
 	${dir_build}/${folder_angular}/conf/nginx.conf 				\
 	${dir_build}/${folder_tomcat}/lib/mysql-connector-java-5.1.48.jar 	\
