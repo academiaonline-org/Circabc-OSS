@@ -18,6 +18,7 @@ git add                                                                         
   README.md                                                                     \
   etc/*/manifests/*.yaml                                                        \
   .github/workflows/ci.yaml                                                     \
+  Dockerfile.* 									\
                                                                                 ;
 #################################################################################
 git commit -m ${release}                                                        ;
