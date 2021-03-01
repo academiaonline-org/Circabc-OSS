@@ -237,7 +237,7 @@ jobs:                                                                          #
                 docker service ls                                              \
                 |                                                              \
                 grep "$app.*replicated.*\([0-9]\)/\1" && break                 ;
-#               grep "$app.*global.*\([0-9]\)/\1" && break                     ;
+                #grep "$app.*global.*\([0-9]\)/\1" && break                     ;
               done                                                             ;
           done                                                                 ;
         ########################################################################
