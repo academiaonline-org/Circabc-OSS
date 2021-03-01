@@ -1,5 +1,5 @@
 # CIRCABC 
-![CI](https://github.com/academiaonline/Circabc-OSS/workflows/CI/badge.svg?branch=docker)
+![CI](https://github.com/academiaonline/Circabc-OSS/workflows/CI/badge.svg?branch=v0.4)
 
 ## Building Circabc web application
 
