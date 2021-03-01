@@ -12,6 +12,7 @@ git checkout -b ${release}                                                      
 sed --in-place /branch=docker/s/docker/${release}/ README.md                    ;
 sed --in-place /image.*latest/s/latest/${release#v}/ etc/*/manifests/*.yaml     ;
 sed --in-place s/-\ docker/-\ ${release}/ .github/workflows/ci.yaml             ;
+sed --in-place s/latest-maven/${release#v}-maven/ Dockerfile.*			;
 #################################################################################
 git add                                                                         \
   README.md                                                                     \
