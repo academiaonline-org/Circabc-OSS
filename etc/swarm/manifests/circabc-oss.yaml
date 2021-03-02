@@ -46,8 +46,8 @@ services:
     - mode: 0444
       source: setup.sql
       target: /docker-entrypoint-initdb.d/setup.sql
-    volumes:
-    - db:/var/lib/mysql
+#    volumes:
+#    - db:/var/lib/mysql
   proxy:
     configs:
     - mode: 0400
@@ -82,7 +82,7 @@ services:
     image: academiaonline/circabc-oss:latest-tomcat
 version: "3.8"
 volumes:
-  db:
+#  db:
   nginx-cache:
   nginx-run:
       
