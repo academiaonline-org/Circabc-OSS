@@ -39,11 +39,6 @@ ARG 										\
 	folder_tomcat=circabc-docker/tomcat
 WORKDIR 									\
 	${dir_app}
-RUN 										\
-	rm -rf * 								\
-	&& 									\
-	mkdir ui 								\
-										;
 COPY 										\
 	--from=build 								\
 	${dir_build}/${folder_angular}/dist/circabc/ 				\
