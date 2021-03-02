@@ -1,0 +1,3 @@
+args1=--lower_case_table_names=1
+args2=--transaction-isolation=READ-COMMITTED
+args3=--datadir=/var/lib/mysql/data
