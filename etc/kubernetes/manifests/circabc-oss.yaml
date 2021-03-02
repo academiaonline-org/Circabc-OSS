@@ -95,17 +95,23 @@ spec:
         args:
         - $(MYSQL_ARG_1)
         - $(MYSQL_ARG_2)
+        - $(MYSQL_ARG_3)
         env:
         - name: MYSQL_ARG_1
           valueFrom:
             configMapKeyRef:
-              key: db-args-1
-              name: db-args-1
+              key: args1
+              name: db-args
         - name: MYSQL_ARG_2
           valueFrom:
             configMapKeyRef:
-              key: db-args-2
-              name: db-args-2
+              key: args2
+              name: db-args
+        - name: MYSQL_ARG_3
+          valueFrom:
+            configMapKeyRef:
+              key: args3
+              name: db-args
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
