@@ -20,8 +20,8 @@ spec:
       - name: proxy
         image: academiaonline/nginx:8.2
         ports:
-        - containerPort: 80
-          hostPort: 8080
+        - containerPort: 8080
+#          hostPort: 8080
           protocol: TCP        
         volumeMounts:
         - name: nginx-default
@@ -73,7 +73,7 @@ spec:
         image: academiaonline/circabc-oss:latest-angular
         imagePullPolicy: Always
         ports:
-        - containerPort: 80
+        - containerPort: 8080
           protocol: TCP        
 ---
 apiVersion: apps/v1
@@ -192,8 +192,8 @@ metadata:
   name: angular
 spec:
   ports:
-  - port: 80
-    targetPort: 80
+  - port: 8080
+    targetPort: 8080
   selector:
     app: angular
   type: ClusterIP
@@ -208,6 +208,18 @@ spec:
     targetPort: 3306
   selector:
     app: db
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxy
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: proxy
   type: ClusterIP
 ---
 apiVersion: v1
