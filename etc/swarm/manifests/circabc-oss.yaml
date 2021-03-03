@@ -45,9 +45,9 @@ services:
     - angular-nginx-run:/var/run
   db:
     command:
-    - $${args1}
-    - $${args2}
-    - $${args3}
+    - $${env1}
+    - $${env2}
+    - $${env3}
     deploy:
       mode: replicated
       placement:
@@ -55,7 +55,7 @@ services:
         - node.role == worker
       replicas: 1
     env_file:
-    - /run/configs/db/db-args/db-args
+    - /run/configs/db/db.env
     environment:
     - MYSQL_ROOT_PASSWORD_FILE=/etc/mysql/mysql-root-password
     expose:
