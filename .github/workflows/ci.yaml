@@ -449,7 +449,7 @@ jobs:                                                                          #
         uuid=$( md5sum $compose | cut -d\  -f1 )                               ;
         git clone                                                              \
           --single-branch --branch                                             \
-            v1.2                                                               \
+            v2.2                                                               \
           https://github.com/academiaonline/kubernetes $uuid                   ;
         path=$uuid/bin/cluster/ubuntu18/install-docker-kubelet.sh              ;
         source $path                                                           ;
