@@ -71,7 +71,7 @@ spec:
     spec:
       containers:
       - name: angular
-        image: academiaonline/circabc-oss:latest-angular
+        image: academiaonline/circabc-oss:0.6-angular
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
@@ -187,7 +187,7 @@ spec:
     spec:
       containers:
       - name: tomcat
-        image: academiaonline/circabc-oss:latest-tomcat
+        image: academiaonline/circabc-oss:0.6-tomcat
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
