@@ -131,18 +131,18 @@ spec:
         - name: MYSQL_ARG_1
           valueFrom:
             configMapKeyRef:
-              key: args1
-              name: db-args
+              key: env1
+              name: db.env
         - name: MYSQL_ARG_2
           valueFrom:
             configMapKeyRef:
-              key: args2
-              name: db-args
+              key: env2
+              name: db.env
         - name: MYSQL_ARG_3
           valueFrom:
             configMapKeyRef:
-              key: args3
-              name: db-args
+              key: env3
+              name: db.env
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
