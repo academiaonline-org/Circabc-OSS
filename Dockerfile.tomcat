@@ -40,6 +40,8 @@ RUN 										\
 		webapps/ROOT 							\
 		webapps/examples 						\
 		webapps/manager 						\
+	&& 									\
+	chmod -R g+w webapps 							\
 										;
 COPY 										\
 	--from=build 								\
