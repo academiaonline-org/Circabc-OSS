@@ -48,6 +48,7 @@ services:
     - $${env1}
     - $${env2}
     - $${env3}
+    - $${env4}
     deploy:
       mode: replicated
       placement:
