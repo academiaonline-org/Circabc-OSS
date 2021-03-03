@@ -211,11 +211,21 @@ spec:
     spec:
       containers:
       - name: tomcat
-        image: academiaonline/circabc-oss:latest-tomcat
+        image: academiaonline/circabc-oss:test-tomcat
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
           protocol: TCP
+        volumeMounts:
+        - name: tomcat-local
+          mountPath: /usr/local/tomcat/circabc_local
+        - name: tomcat-shared
+          mountPath: /usr/local/tomcat/circabc_shared
+      volumes:
+      - name: tomcat-local
+        emptyDir: {}
+      - name: tomcat-shared
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
