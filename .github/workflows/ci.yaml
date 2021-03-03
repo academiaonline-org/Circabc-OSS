@@ -425,8 +425,20 @@ jobs:                                                                          #
         compose=etc/$mode/manifests/$project.yaml                              ;
         sed -i /image:.*$project/s/$release/$release-testing/ $compose         ;
         ########################################################################
+        for app in maven                                                       ;
+          do                                                                   \
+            docker build                                                       \
+              --file Dockerfile.${app}                                         \
+              --tag ${repository}:${release}-testing-${app}                    \
+              ${PWD}                                                           \
+                                                                               ;
+          done                                                                 ;
+        ########################################################################
         for app in angular tomcat                                              ;
           do                                                                   \
+            sed -i                                                             \
+              /${project}:.*-maven/s/${release}/${release}-testing/            \
+              Dockerfile.${app}                                                ;
             docker build                                                       \
               --file Dockerfile.${app}                                         \
               --tag ${repository}:${release}-testing-${app}                    \
