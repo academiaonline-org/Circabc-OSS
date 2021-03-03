@@ -127,6 +127,7 @@ spec:
         - $(MYSQL_ARG_1)
         - $(MYSQL_ARG_2)
         - $(MYSQL_ARG_3)
+        - $(MYSQL_ARG_4)
         env:
         - name: MYSQL_ARG_1
           valueFrom:
@@ -142,6 +143,11 @@ spec:
           valueFrom:
             configMapKeyRef:
               key: env3
+              name: db.env
+        - name: MYSQL_ARG_4
+          valueFrom:
+            configMapKeyRef:
+              key: env4
               name: db.env
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
