@@ -451,9 +451,9 @@ jobs:                                                                          #
           --single-branch --branch                                             \
             v2.2                                                               \
           https://github.com/academiaonline/kubernetes $uuid                   ;
-        path=$uuid/bin/cluster/ubuntu18/install-docker-kubelet.sh              ;
+        path=$uuid/ubuntu18/docker/bin/install-container-kubelet.sh            ;
         source $path                                                           ;
-        path=$uuid/bin/cluster/ubuntu18/install-leader.sh                      ;
+        path=$uuid/ubuntu18/docker/bin/install-leader.sh                       ;
         source $path                                                           ;
         master=$( kubectl get node | grep master | awk '{ print $1 }' )        ;
         kubectl taint node $master node-role.kubernetes.io/master:NoSchedule-  ;
