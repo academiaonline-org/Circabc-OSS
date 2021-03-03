@@ -461,10 +461,6 @@ jobs:                                                                          #
         source $path                                                           ;
         rm -rf $uuid                                                           ;
         ########################################################################
-        kubectl delete cm db-args                                              ;
-        kubectl create cm db-args                                              \
-          --from-env-file run/configs/db/db-args/db-args                       ;
-        ########################################################################
         sed -i /imagePullPolicy/s/Always/Never/ $compose                       ;
         kubectl apply -f $compose                                              ;
         ########################################################################        
