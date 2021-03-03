@@ -3,7 +3,7 @@
 #       SPDX-License-Identifier:  GPL-2.0-only                                  #
 #################################################################################
 FROM 										\
-	academiaonline/circabc-oss:latest-maven                                 \
+	academiaonline/circabc-oss:0.7-maven                                 \
 	AS 									\
 	build
 #################################################################################
