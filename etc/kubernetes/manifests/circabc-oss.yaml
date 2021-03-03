@@ -4,7 +4,6 @@
 ################################################################################
 ---
 apiVersion: apps/v1
-#kind: DaemonSet
 kind: Deployment
 metadata:
   name: proxy
@@ -22,7 +21,6 @@ spec:
         image: academiaonline/nginx:8.3
         ports:
         - containerPort: 8080
-#          hostPort: 8080
           protocol: TCP        
         volumeMounts:
         - name: nginx-default
@@ -128,6 +126,8 @@ spec:
         - $(MYSQL_ARG_2)
         - $(MYSQL_ARG_3)
         - $(MYSQL_ARG_4)
+        - $(MYSQL_ARG_5)
+        - $(MYSQL_ARG_6)
         env:
         - name: MYSQL_ARG_1
           valueFrom:
@@ -149,6 +149,16 @@ spec:
             configMapKeyRef:
               key: env4
               name: db.env
+        - name: MYSQL_ARG_5
+          valueFrom:
+            configMapKeyRef:
+              key: env5
+              name: db.env
+        - name: MYSQL_ARG_6
+          valueFrom:
+            configMapKeyRef:
+              key: env6
+              name: db.env
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -168,8 +178,6 @@ spec:
       volumes:
       - name: db
         emptyDir: {}
- #       persistentVolumeClaim:
- #         claimName: db
       - name: db-init
         secret:
           items:
@@ -198,30 +206,6 @@ spec:
         ports:
         - containerPort: 8080
           protocol: TCP
----
-#apiVersion: v1
-#kind: PersistentVolume
-#metadata:
-#  name: db
-#spec:
-#  capacity:
-#    storage: 1Gi
-#  accessModes:
-#  - ReadWriteOnce
-#  hostPath:#
-#    path: /tmp/db
-#  storageClassName: local
----
-#apiVersion: v1
-#kind: PersistentVolumeClaim
-#metadata:
-#  name: db
-#spec:
-#  accessModes:
-#  - ReadWriteOnce
-#  resources:
-#    requests:
-#      storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
@@ -270,11 +254,4 @@ spec:
   selector:
     app: tomcat
   type: ClusterIP
----
-#apiVersion: storage.k8s.io/v1
-#kind: StorageClass
-#metadata:
-#  name: local
-#provisioner: kubernetes.io/no-provisioner
-#volumeBindingMode: WaitForFirstConsumer
 ---
