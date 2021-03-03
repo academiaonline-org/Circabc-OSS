@@ -4,14 +4,14 @@
 ################################################################################
 configs:
   nginx.conf.angular:
-    file: /run/configs/proxy/nginx/nginx.conf.angular
+    file: /run/configs/angular/nginx/nginx.conf.angular
 #    external: true
   nginx.conf.proxy:
     file: /run/configs/proxy/nginx/nginx.conf.proxy
 #    external: true
 secrets:
   default.conf.angular:
-    file: /run/secrets/proxy/nginx/conf.d/default.conf.angular
+    file: /run/secrets/angular/nginx/conf.d/default.conf.angular
 #    external: true
   default.conf.proxy:
     file: /run/secrets/proxy/nginx/conf.d/default.conf.proxy
