@@ -41,13 +41,13 @@ spec:
       - name: nginx-conf
         configMap:
           items:
-          - key: nginx.conf
+          - key: nginx.conf.proxy
             path: nginx.conf
           name: nginx.conf.proxy
       - name: nginx-default
         secret:
           items:
-          - key: default.conf
+          - key: default.conf.proxy
             path: default.conf
           secretName: default.conf.proxy
       - name: nginx-cache
@@ -93,13 +93,13 @@ spec:
       - name: nginx-conf
         configMap:
           items:
-          - key: nginx.conf
+          - key: nginx.conf.angular
             path: nginx.conf
           name: nginx.conf.angular
       - name: nginx-default
         secret:
           items:
-          - key: default.conf
+          - key: default.conf.angular
             path: default.conf
           secretName: default.conf.angular
       - name: nginx-cache
