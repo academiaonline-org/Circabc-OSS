@@ -1,5 +1,5 @@
 proxyrc
-Dockerfile.maven.proxyrc
+proxyrc-Dockerfile.maven
 target/
 .idea/
 .vscode/
