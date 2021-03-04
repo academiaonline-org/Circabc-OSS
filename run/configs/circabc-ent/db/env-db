@@ -4,3 +4,4 @@ env3=--datadir=/var/lib/mysql/data
 env4=--explicit-defaults-for-timestamp=1
 env5=--character-set-server=utf8mb4
 env6=--collation-server=utf8mb4_bin
+
