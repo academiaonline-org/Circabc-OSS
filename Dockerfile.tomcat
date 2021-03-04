@@ -11,8 +11,10 @@ ARG 										\
 	dir_build=/build
 ARG 										\
 	folder_tomcat=circabc-docker/tomcat
+#################################################################################
 WORKDIR 									\
 	${dir_build}
+#################################################################################
 RUN 										\
 	ls 									\
 	${dir_build}/${folder_tomcat}/dist/circabc.war 				\
@@ -33,8 +35,10 @@ ARG 										\
 	dir_build=/build
 ARG 										\
 	folder_tomcat=circabc-docker/tomcat
+#################################################################################
 WORKDIR 									\
 	${dir_app}
+#################################################################################
 RUN 										\
 	rm -rf 									\
 		webapps/ROOT 							\
@@ -43,6 +47,7 @@ RUN 										\
 	&& 									\
 	chmod -R g+w webapps 							\
 										;
+#################################################################################
 COPY 										\
 	--from=build 								\
 	${dir_build}/${folder_tomcat}/dist/circabc.war 				\

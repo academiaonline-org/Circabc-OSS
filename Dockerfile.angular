@@ -11,16 +11,13 @@ ARG 										\
 	dir_build=/build
 ARG 										\
 	folder_angular=circabc-docker/angular
-ARG 										\
-	folder_tomcat=circabc-docker/tomcat
+#################################################################################
 WORKDIR 									\
 	${dir_build}
+#################################################################################
 RUN 										\
 	ls 									\
 	${dir_build}/${folder_angular}/dist/circabc/ 				\
-	${dir_build}/${folder_tomcat}/lib/mysql-connector-java-5.1.48.jar 	\
-	${dir_build}/${folder_tomcat}/conf/context.xml 				\
-	${dir_build}/${folder_tomcat}/wait-for-it.sh 				\
 										;
 #################################################################################
 FROM 										\
@@ -34,26 +31,14 @@ ARG 										\
 	dir_build=/build
 ARG 										\
 	folder_angular=circabc-docker/angular
-ARG 										\
-	folder_tomcat=circabc-docker/tomcat
+#################################################################################
 WORKDIR 									\
 	${dir_app}
+#################################################################################
 COPY 										\
 	--from=build 								\
 	${dir_build}/${folder_angular}/dist/circabc/ 				\
 	ui
-COPY 										\
-	--from=build 								\
-	${dir_build}/${folder_tomcat}/lib/mysql-connector-java-5.1.48.jar 	\
-	lib/
-COPY 										\
-	--from=build 								\
-	${dir_build}/${folder_tomcat}/conf/context.xml 				\
-	conf/
-COPY 										\
-	--from=build 								\
-	${dir_build}/${folder_tomcat}/wait-for-it.sh 				\
-	.
 #################################################################################
 CMD 										\
 	["nginx","-g","daemon off;"]

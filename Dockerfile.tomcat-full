@@ -9,11 +9,14 @@ FROM 										\
 #################################################################################
 ARG 										\
 	zip=alfresco-community-4.2.f.zip
+#################################################################################
 WORKDIR 									\
 	${zip}
+#################################################################################
 COPY 										\
 	${zip}.parts				 				\
 	.
+#################################################################################
 RUN 										\
 	cat x* 1> ${zip} 							\
 	&& 									\
@@ -37,8 +40,10 @@ ARG 										\
 	folder_tomcat=circabc-docker/tomcat
 ARG 										\
 	zip=alfresco-community-4.2.f.zip
+#################################################################################
 WORKDIR 									\
 	${dir_build}
+#################################################################################
 COPY 										\
 	.					 				\
 	.
@@ -46,6 +51,7 @@ COPY 										\
 	--from=zip 								\
 	${zip}/web-server/webapps/alfresco.war	 				\
 	circabc-resources/
+#################################################################################
 RUN 										\
 	mvn clean 								\
 	&& 									\
@@ -78,23 +84,20 @@ ARG 										\
 ARG 										\
 	dir_build=/build
 ARG 										\
-	dir_clone=/clone
-ARG 										\
-	folder_angular=circabc-docker/angular
-ARG 										\
-	folder_backend=circabc-backend/target
-ARG 										\
-	folder_frontend=circabc-frontend/dist/circabc
-ARG 										\
 	folder_tomcat=circabc-docker/tomcat
+#################################################################################
 WORKDIR 									\
 	${dir_app}
+#################################################################################
 RUN 										\
 	rm -rf 									\
 		webapps/ROOT 							\
 		webapps/examples 						\
 		webapps/manager 						\
+	&&									\
+	chmod -R g+w webapps							\
 										;
+#################################################################################
 COPY 										\
 	--from=build 								\
 	${dir_build}/${folder_tomcat}/dist/circabc.war 				\
