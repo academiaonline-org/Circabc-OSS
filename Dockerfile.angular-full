@@ -74,25 +74,67 @@ RUN 										\
 		${folder_angular}/dist/ 					\
 										;
 #################################################################################
-FROM 										\
-	academiaonline/nginx:8.3 						\
-	AS 									\
-	production
+FROM                                                                            \
+        nginx:1.18.0-alpine@sha256:d7038eae37cfa36cd8e286f6d6daf0df7a445a2da327517b3cde4ba1833adc0c \
+        AS                                                                      \
+        production
 #################################################################################
-ARG 										\
-	dir_app=/usr/share/nginx/html
-ARG 										\
-	dir_build=/build
-ARG 										\
-	folder_angular=circabc-docker/angular
+ARG                                                                             \
+        dir_app=/usr/share/nginx/html
+ARG                                                                             \
+        dir_build=/build
+ARG                                                                             \
+        folder_angular=circabc-docker/angular
 #################################################################################
-WORKDIR 									\
-	${dir_app}
+WORKDIR                                                                         \
+        ${dir_app}
 #################################################################################
-COPY 										\
-	--from=build 								\
-	${dir_build}/${folder_angular}/dist/circabc/ 				\
-	ui
+COPY                                                                            \
+        --from=build                                                            \
+        ${dir_build}/${folder_angular}/dist/circabc/                            \
+        ui
+#################################################################################
+RUN                                                                             \
+        for package in                                                          \
+                $(                                                              \
+                        for x in 0 1 2 3 4 5 6 7 8 9;                           \
+                        do                                                      \
+                                apk list                                        \
+                                |                                               \
+                                awk /nginx/'{ print $1 }'                       \
+                                |                                               \
+                                awk -F-$x  '{ print $1 }'                       \
+                                |                                               \
+                                grep -v '\-[0-9]';                              \
+                        done                                                    \
+                        |                                                       \
+                        sort                                                    \
+                        |                                                       \
+                        uniq                                                    \
+                        |                                                       \
+                        grep -v ^nginx$                                         \
+                );                                                              \
+        do                                                                      \
+                apk del $package;                                               \
+        done                                                                    \
+                                                                                ;
+#################################################################################
+RUN                                                                             \
+        rm      -f                                                              \
+                        /etc/nginx/nginx.conf                                   \
+        &&                                                                      \
+        rm      -f                                                              \
+                -r                                                              \
+                        /etc/nginx/conf.d/*                                     \
+        &&                                                                      \
+        rm      -f                                                              \
+                -r                                                              \
+                        /usr/share/nginx/html/*                                 \
+                                                                                ;
+#################################################################################
+VOLUME                                                                          \
+        /var/cache/nginx                                                        \
+        /var/run                                                                \
 #################################################################################
 CMD 										\
 	["nginx","-g","daemon off;"]
