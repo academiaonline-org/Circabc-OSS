@@ -53,6 +53,7 @@ WORKDIR 									\
 COPY 										\
 	.					 				\
 	.
+#################################################################################
 COPY 										\
 	--from=zip 								\
 	${zip}/web-server/webapps/alfresco.war	 				\
