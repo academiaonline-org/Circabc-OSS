@@ -72,3 +72,6 @@ COPY 										\
 CMD 										\
 	["./wait-for-it.sh","db:3306","--timeout=0","--strict","--","catalina.sh","run"]
 #################################################################################
+# sudo docker build -f circabc-docker/tomcat/Dockerfile.tomcat --no-cache -t academiaonline/circabc-oss:latest-tomcat circab
+c-docker/tomcat
+#################################################################################

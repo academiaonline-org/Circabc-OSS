@@ -85,3 +85,5 @@ VOLUME                                                                          
 CMD 										\
 	["nginx","-g","daemon off;"]
 #################################################################################
+# sudo docker build -f circabc-docker/angular/Dockerfile.angular --no-cache -t academiaonline/circabc-oss:latest-angular circabc-docker/angular
+#################################################################################

@@ -83,3 +83,5 @@ RUN 										\
 		${folder_angular}/dist/ 					\
 										;
 #################################################################################
+# sudo docker build -f Dockerfile.maven --no-cache -t academiaonline/circabc-oss:latest-maven .
+#################################################################################
