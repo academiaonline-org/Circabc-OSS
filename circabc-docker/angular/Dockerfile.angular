@@ -20,20 +20,20 @@ RUN 										\
 	${dir_build}/${folder_angular}/dist/circabc/ 				\
 										;
 #################################################################################
-FROM                                                                            \
-        nginx:1.18.0-alpine@sha256:d7038eae37cfa36cd8e286f6d6daf0df7a445a2da327517b3cde4ba1833adc0c \
-        AS                                                                      \
-        production
+FROM 										\
+	nginx:1.18.0-alpine@sha256:d7038eae37cfa36cd8e286f6d6daf0df7a445a2da327517b3cde4ba1833adc0c \
+	AS 									\
+	production
 #################################################################################
-ARG                                                                             \
-        dir_app=/usr/share/nginx/html
-ARG                                                                             \
-        dir_build=/build
-ARG                                                                             \
-        folder_angular=circabc-docker/angular
+ARG 										\
+	dir_app=/usr/share/nginx/html
+ARG 										\
+	dir_build=/build
+ARG 										\
+	folder_angular=circabc-docker/angular
 #################################################################################
-WORKDIR                                                                         \
-        ${dir_app}
+WORKDIR 									\
+	${dir_app}
 #################################################################################
 RUN                                                                             \
         for package in                                                          \
@@ -60,23 +60,23 @@ RUN                                                                             
         done                                                                    \
                                                                                 ;
 #################################################################################
-RUN                                                                             \
-        rm      -f                                                              \
-                        /etc/nginx/nginx.conf                                   \
-        &&                                                                      \
-        rm      -f                                                              \
-                -r                                                              \
-                        /etc/nginx/conf.d/*                                     \
-        &&                                                                      \
-        rm      -f                                                              \
-                -r                                                              \
-                        *                                 			\
-                                                                                ;
+RUN 										\
+	rm 	-f 								\
+			/etc/nginx/nginx.conf 					\
+	&&									\
+	rm 	-f 								\
+		-r 								\
+			/etc/nginx/conf.d/* 					\
+	&&									\
+	rm 	-f 								\
+		-r 								\
+			* 							\
+										;
 #################################################################################
-COPY                                                                            \
-        --from=build                                                            \
-        ${dir_build}/${folder_angular}/dist/circabc/                            \
-        ui
+COPY 										\
+	--from=build 								\
+	${dir_build}/${folder_angular}/dist/circabc/ 				\
+	ui
 #################################################################################
 VOLUME                                                                          \
         /var/cache/nginx                                                        \
