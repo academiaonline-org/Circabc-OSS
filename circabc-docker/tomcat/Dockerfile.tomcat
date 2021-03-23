@@ -18,10 +18,6 @@ WORKDIR 									\
 RUN 										\
 	ls 									\
 	${dir_build}/${folder_tomcat}/dist/circabc.war 				\
-	${dir_build}/${folder_tomcat}/lib/ecas-weblogic-12.2.1-authprovider-4.26.3.jar \
-	${dir_build}/${folder_tomcat}/lib/mysql-connector-java-5.1.48.jar 	\
-	${dir_build}/${folder_tomcat}/conf/context.xml 				\
-	${dir_build}/${folder_tomcat}/wait-for-it.sh 				\
 										;
 #################################################################################
 FROM 										\
@@ -53,20 +49,16 @@ COPY 										\
 	${dir_build}/${folder_tomcat}/dist/circabc.war 				\
 	webapps/ROOT.war
 COPY 										\
-	--from=build 								\
-	${dir_build}/${folder_tomcat}/lib/ecas-weblogic-12.2.1-authprovider-4.26.3.jar \
+	${folder_tomcat}/lib/ecas-weblogic-12.2.1-authprovider-4.26.3.jar 	\
 	lib/
 COPY 										\
-	--from=build 								\
-	${dir_build}/${folder_tomcat}/lib/mysql-connector-java-5.1.48.jar 	\
+	${folder_tomcat}/lib/mysql-connector-java-5.1.48.jar 			\
 	lib/
 COPY 										\
-	--from=build 								\
-	${dir_build}/${folder_tomcat}/conf/context.xml 				\
+	${folder_tomcat}/conf/context.xml 					\
 	conf/
 COPY 										\
-	--from=build 								\
-	${dir_build}/${folder_tomcat}/wait-for-it.sh 				\
+	${folder_tomcat}/wait-for-it.sh 					\
 	.
 #################################################################################
 CMD 										\
