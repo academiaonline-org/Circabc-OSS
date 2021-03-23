@@ -3,7 +3,7 @@
 #       SPDX-License-Identifier:  GPL-2.0-only                                  #
 #################################################################################
 FROM 										\
-	academiaonline/circabc-oss:latest-maven                                 \
+	academiaonline/circabc-oss:1.5-maven                                 \
 	AS 									\
 	build
 #################################################################################
@@ -85,5 +85,5 @@ VOLUME                                                                          
 CMD 										\
 	["nginx","-g","daemon off;"]
 #################################################################################
-# sudo docker build -f circabc-docker/angular/Dockerfile.angular --no-cache -t academiaonline/circabc-oss:latest-angular circabc-docker/angular
+# sudo docker build -f circabc-docker/angular/Dockerfile.angular --no-cache -t academiaonline/circabc-oss:1.5-angular circabc-docker/angular
 #################################################################################

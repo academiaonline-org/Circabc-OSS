@@ -3,7 +3,7 @@
 #       SPDX-License-Identifier:  GPL-2.0-only                                  #
 #################################################################################
 FROM 										\
-	academiaonline/circabc-oss:latest-maven                                 \
+	academiaonline/circabc-oss:1.5-maven                                 \
 	AS 									\
 	build
 #################################################################################
@@ -61,6 +61,6 @@ COPY 										\
 CMD 										\
 	["./wait-for-it.sh","db:3306","--timeout=0","--strict","--","catalina.sh","run"]
 #################################################################################
-# sudo docker build -f circabc-docker/tomcat/Dockerfile.tomcat --no-cache -t academiaonline/circabc-oss:latest-tomcat circab
+# sudo docker build -f circabc-docker/tomcat/Dockerfile.tomcat --no-cache -t academiaonline/circabc-oss:1.5-tomcat circab
 c-docker/tomcat
 #################################################################################
