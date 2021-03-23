@@ -35,6 +35,63 @@ FROM 										\
 	build
 #################################################################################
 ARG 										\
+	NO_PROXY
+ARG 										\
+	PROXY_HOST
+ARG 										\
+	PROXY_PASS
+ARG 										\
+	PROXY_PORT
+ARG 										\
+	PROXY_USER
+ARG 										\
+	REPO_HOST
+ARG 										\
+	REPO_PASS
+ARG 										\
+	REPO_USER
+#################################################################################
+ARG 										\
+	settings_orig=usr/share/maven/conf/settings.xml
+#################################################################################
+COPY 										\
+	${settings_orig} 							\
+	/${settings_orig}
+#################################################################################
+RUN 										\
+	sed --in-place 								\
+		s/NO_PROXY/${NO_PROXY}/ 					\
+		/${settings_orig}
+RUN 										\
+	sed --in-place 								\
+		s/PROXY_HOST/${PROXY_HOST}/ 					\
+		/${settings_orig}
+RUN 										\
+	sed --in-place 								\
+		s/PROXY_PASS/${PROXY_PASS}/ 					\
+		/${settings_orig}
+RUN 										\
+	sed --in-place 								\
+		s/PROXY_PORT/${PROXY_PORT}/ 					\
+		/${settings_orig}
+RUN 										\
+	sed --in-place 								\
+		s/PROXY_USER/${PROXY_USER}/ 					\
+		/${settings_orig}
+RUN 										\
+	sed --in-place 								\
+		s/REPO_HOST/${REPO_HOST}/ 					\
+		/${settings_orig}
+RUN 										\
+	sed --in-place 								\
+		s/REPO_PASS/${REPO_PASS}/ 					\
+		/${settings_orig}
+RUN 										\
+	sed --in-place 								\
+		s/REPO_USER/${REPO_USER}/ 					\
+		/${settings_orig}
+#################################################################################
+ARG 										\
 	dir_build=/build
 ARG 										\
 	folder_angular=circabc-docker/angular
