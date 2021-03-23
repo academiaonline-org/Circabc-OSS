@@ -1,0 +1,1 @@
+0 0 * * * export stack=circabc-oss && ${HOME}/${stack}/bin/${stack}.re-deploy.sh
