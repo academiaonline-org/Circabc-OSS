@@ -49,9 +49,6 @@ COPY 										\
 	${dir_build}/${folder_tomcat}/dist/circabc.war 				\
 	webapps/ROOT.war
 COPY 										\
-	lib/ecas-weblogic-12.2.1-authprovider-4.26.3.jar 			\
-	lib/
-COPY 										\
 	lib/mysql-connector-java-5.1.48.jar 					\
 	lib/
 COPY 										\
