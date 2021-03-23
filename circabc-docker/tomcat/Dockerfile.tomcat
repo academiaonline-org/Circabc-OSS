@@ -49,16 +49,16 @@ COPY 										\
 	${dir_build}/${folder_tomcat}/dist/circabc.war 				\
 	webapps/ROOT.war
 COPY 										\
-	${folder_tomcat}/lib/ecas-weblogic-12.2.1-authprovider-4.26.3.jar 	\
+	lib/ecas-weblogic-12.2.1-authprovider-4.26.3.jar 			\
 	lib/
 COPY 										\
-	${folder_tomcat}/lib/mysql-connector-java-5.1.48.jar 			\
+	lib/mysql-connector-java-5.1.48.jar 					\
 	lib/
 COPY 										\
-	${folder_tomcat}/conf/context.xml 					\
+	conf/context.xml 							\
 	conf/
 COPY 										\
-	${folder_tomcat}/wait-for-it.sh 					\
+	wait-for-it.sh 								\
 	.
 #################################################################################
 CMD 										\
