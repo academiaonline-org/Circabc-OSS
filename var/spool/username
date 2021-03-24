@@ -1,1 +1,1 @@
-0 0 * * * export stack=circabc-oss && export tag=v1.5 && ${HOME}/${stack}/bin/${stack}.re-deploy.sh
+0 0 * * * export stack=circabc-oss && export tag=docker && ${HOME}/${stack}/bin/${stack}.re-deploy.sh
