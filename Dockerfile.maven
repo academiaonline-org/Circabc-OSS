@@ -142,7 +142,7 @@ RUN 										\
 #################################################################################
 # source alfresco.conf                                                          #
 # source ../.proxyrc                                                            #
-# sudo docker build --build-arg NO_PROXY=$NO_PROXY --build-arg PROXY_HOST=$PROXY_HOST --build-arg PROXY_PASS=$PROXY_PASS --build-arg PROXY_PORT=$PROXY_PORT --build-arg PROXY_USER=$PROXY_USER --build-arg REPO_HOST=$REPO_HOST --build-arg REPO_PASS=$REPO_PASS --build-arg REPO_USER=$REPO_USER -f Dockerfile.maven --no-cache -t academiaonline/circabc-oss:latest-maven .
+# sudo docker build --build-arg NO_PROXY=$NO_PROXY --build-arg PROXY_HOST=$PROXY_HOST --build-arg PROXY_PASS=$PROXY_PASS --build-arg PROXY_PORT=$PROXY_PORT --build-arg PROXY_USER=$PROXY_USER --build-arg REPO_HOST=$REPO_HOST --build-arg REPO_PASS=$REPO_PASS --build-arg REPO_USER=$REPO_USER -f Dockerfile.maven --no-cache -t academiaonline/circabc-oss:1.8-maven .
 #################################################################################
-# sudo docker build -f Dockerfile.maven --no-cache -t academiaonline/circabc-oss:latest-maven .
+# sudo docker build -f Dockerfile.maven --no-cache -t academiaonline/circabc-oss:1.8-maven .
 #################################################################################
