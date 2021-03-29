@@ -10,16 +10,24 @@ release=${1}                                                                    
 #################################################################################
 git checkout -b ${release}                                                      ;
 #################################################################################
-sed --in-place s/-\ ${main_branch}/-\ ${release}/ .github/workflows/ci.yaml	;
-sed --in-place /circabc.*latest/s/latest/${release#v}/ 				\
+sed --in-place 									\
+	s/-\ ${main_branch}/-\ ${release}/ 					\
+	.github/workflows/ci.yaml						;
+sed --in-place 									\
+	/circabc.*latest/s/latest/${release#v}/ 				\
 	circabc-docker/*/Dockerfile.* 						\
 	Dockerfile.* 								\
 	etc/*/manifests/*.yaml 							\
 										;
-sed --in-place /branch=${main_branch}/s/${main_branch}/${release}/ README.md	;
-sed --in-place s/${main_branch}/${release}/ var/spool/username			;
+sed --in-place 									\
+	/branch=${main_branch}/s/${main_branch}/${release}/ 			\
+	README.md 								\
+										;
+sed --in-place 									\
+	s/${main_branch}/${release}/ 						\
+	var/spool/username							;
 #################################################################################
-git add 									\
+git add                                                                         \
 	.github/workflows/ci.yaml 						\
 	circabc-docker/*/Dockerfile.* 						\
 	Dockerfile.* 								\

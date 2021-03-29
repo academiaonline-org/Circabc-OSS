@@ -1,5 +1,3 @@
-proxyrc
-proxyrc-Dockerfile.maven
 target/
 .idea/
 .vscode/
@@ -27,5 +25,3 @@ build/prod3.bat
 circabc-backend/.classpath
 circabc-frontend-wrapper/.classpath
 circabc-frontend/out-tsc/
-alfresco-community-4.2.f.zip
-mvnsettings.sh
