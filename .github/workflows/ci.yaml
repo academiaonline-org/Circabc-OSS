@@ -154,7 +154,7 @@ jobs:                                                                          #
         #    sed -i                                                             \
         #      /${project}:.*-maven/s/${release}/${release}-testing/            \
         #      Dockerfile.${app}                                                ;
-        3    docker build                                                       \
+        #    docker build                                                       \
         #      --file Dockerfile.${app}                                         \
         #      --tag ${repository}:${release}-testing-${app}                    \
         #      ${PWD}                                                           \
