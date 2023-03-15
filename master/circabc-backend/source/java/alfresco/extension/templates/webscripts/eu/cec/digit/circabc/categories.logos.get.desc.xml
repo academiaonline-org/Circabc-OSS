@@ -1,8 +1,0 @@
-<webscript>
-  <shortname>CIRCABC categories logos</shortname>
-  <description>Get all logos uplodaded int the category</description>
-  <url>/circabc/categories/{id}/logos</url>
-  <format default="json"/>
-  <authentication>user</authentication>
-  <transaction>required</transaction>
-</webscript>

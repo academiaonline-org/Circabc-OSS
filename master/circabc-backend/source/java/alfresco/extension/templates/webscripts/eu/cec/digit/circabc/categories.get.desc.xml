@@ -1,8 +1,0 @@
-<webscript>
-  <shortname>get a category</shortname>
-  <description>Get a category</description>
-  <url>/circabc/categories/{id}</url>
-  <format default="json"/>
-  <authentication>guest</authentication>
-  <transaction>required</transaction>
-</webscript>

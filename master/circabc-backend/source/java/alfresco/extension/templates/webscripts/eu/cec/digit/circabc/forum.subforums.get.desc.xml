@@ -1,8 +1,0 @@
-<webscript>
-  <shortname>Browse forum sub forums</shortname>
-  <description>Browse forum sub forums </description>
-    <url>/circabc/forums/{id}/subforums</url>
-  <format default="json"/>
-  <authentication>guest</authentication>
-  <transaction>required</transaction>
-</webscript>

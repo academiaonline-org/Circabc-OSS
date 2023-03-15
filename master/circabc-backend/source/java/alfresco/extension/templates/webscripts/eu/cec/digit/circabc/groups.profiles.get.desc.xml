@@ -1,8 +1,0 @@
-<webscript>
-  <shortname>Get the members of a IG</shortname>
-  <description>Get the members of a IG</description>
-    <url>/circabc/groups/{igId}/profiles</url>
-  <format default="json"/>
-  <authentication>guest</authentication>
-  <transaction>required</transaction>
-</webscript>
