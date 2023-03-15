@@ -1,0 +1,335 @@
+<div class="fluid page-container">
+  <div class="file-details">
+    <div class="wrap">
+      <a (click)="goBack()" class="page-header__backlink">{{
+        'label.back' | translate
+      }}</a>
+      <section class="box">
+        <header class="header">
+          <span *ngIf="viewing" class="title">{{
+            'account.view.details' | translate
+          }}</span>
+          <span *ngIf="!viewing" class="title">{{
+            'account.edit.details' | translate
+          }}</span>
+          <div class="field" style="float: right" *ngIf="processing">
+            <cbc-spinner></cbc-spinner>
+          </div>
+        </header>
+        <div class="main">
+          <section class="file-informations">
+            <form [formGroup]="updateUserForm">
+              <div class="field switch">
+                <!-- User details -->
+                <div class="cell-photo">
+                  <span class="photo" style="float: right">
+                    <img
+                      *ngIf="user.lastname && ready"
+                      class="img-border"
+                      [attr.src]="user.avatar | cbcDownload | cbcSecure"
+                      width="90"
+                      height="90"
+                    />
+                    <div
+                      *ngIf="user.lastname && !user.defaultAvatar"
+                      style="font-size: 12px; margin-top: 5px"
+                    >
+                      <cbc-inline-delete
+                        style="position: absolute"
+                        [image]="'img/rubbish-bin-blue-small.png'"
+                        [imageHeightWidth]="13"
+                        [deleteLabel]="'label.delete.logo'"
+                        [(deleting)]="processing"
+                        [(mustConfirm)]="mustConfirmAvatarDelete"
+                        (deletionConfirmed)="removeAvatar()"
+                      ></cbc-inline-delete
+                      ><br />
+                    </div>
+                    <div
+                      *ngIf="user.lastname"
+                      style="font-size: 12px; margin-top: 5px"
+                    >
+                      <a (click)="changeAvatar()"
+                        ><img
+                          src="img/bigicon-upload-53x53.png"
+                          width="13"
+                          height="13"
+                        />&nbsp;{{ 'label.update.logo' | translate }}</a
+                      >
+                    </div>
+                  </span>
+                </div>
+                <span style="font-size: 16px">{{
+                  'label.identity' | translate
+                }}</span>
+                <br />
+                <br />
+                <br />
+                <div class="field">
+                  <label>{{ 'label.username' | translate }}</label>
+                  <label>{{ user.userId }}</label>
+                </div>
+                <div class="field">
+                  <label for="firstname">{{
+                    'label.firstname' | translate
+                  }}</label>
+                  <input
+                    type="text"
+                    id="firstname"
+                    formControlName="firstname"
+                    #nameInputFieldElement
+                  />
+                </div>
+                <div class="field">
+                  <label for="lastname">{{
+                    'label.lastname' | translate
+                  }}</label>
+                  <input type="text" id="lastname" formControlName="lastname" />
+                </div>
+                <div class="field">
+                  <label for="email">{{ 'label.email' | translate }}</label>
+                  <input type="text" id="email" formControlName="email" />
+                  <cbc-control-message
+                    [control]="emailControl"
+                  ></cbc-control-message>
+                </div>
+                <br />
+                <hr />
+                <br />
+                <span style="font-size: 16px">{{
+                  'label.contact.information' | translate
+                }}</span>
+                <br />
+                <br />
+                <br />
+                <div class="field">
+                  <label for="title">{{ 'label.title' | translate }}</label>
+                  <input type="text" id="title" formControlName="title" />
+                </div>
+                <div class="field">
+                  <label for="organisation">{{
+                    'label.organisation' | translate
+                  }}</label>
+                  <input
+                    type="text"
+                    id="organisation"
+                    formControlName="organisation"
+                  />
+                </div>
+                <div class="field">
+                  <label for="phone">{{ 'label.phone' | translate }}</label>
+                  <input type="text" id="phone" formControlName="phone" />
+                </div>
+                <div class="field">
+                  <label for="postalAddress">{{
+                    'label.postal.address' | translate
+                  }}</label>
+                  <input
+                    type="text"
+                    id="postalAddress"
+                    formControlName="postalAddress"
+                  />
+                </div>
+                <div class="field">
+                  <label for="description">{{
+                    'label.description' | translate
+                  }}</label>
+                  <input
+                    type="text"
+                    id="description"
+                    formControlName="description"
+                  />
+                </div>
+                <div class="field">
+                  <label for="fax">{{ 'label.fax' | translate }}</label>
+                  <input type="text" id="fax" formControlName="fax" />
+                </div>
+                <div class="field">
+                  <label for="url">{{ 'label.url' | translate }}</label>
+                  <input type="text" id="url" formControlName="urlAddress" />
+                  <cbc-control-message
+                    [control]="urlAddressControl"
+                  ></cbc-control-message>
+                </div>
+                <br />
+                <hr />
+                <br />
+                <span style="font-size: 16px">{{
+                  'label.user.options' | translate
+                }}</span>
+                <br />
+                <br />
+                <br />
+                <div class="field">
+                  <label for="uiLanguage">{{
+                    'label.ui.language' | translate
+                  }}</label>
+                  <div class="custom-select select--form reset-width">
+                    <cbc-lang-selector
+                      [disable]="viewing"
+                      formControlName="uiLanguage"
+                    ></cbc-lang-selector>
+                  </div>
+                </div>
+                <div class="field switch">
+                  <div class="label">{{
+                    'label.global.notification' | translate
+                  }}</div>
+                  <input
+                    id="globalNotificationEnabled"
+                    class="cmn-toggle cmn-toggle-round"
+                    type="checkbox"
+                    formControlName="globalNotificationEnabled"
+                  />
+                  <label
+                    for="globalNotificationEnabled"
+                    class="nonBlockLabel"
+                  ></label>
+                  <span>{{
+                    (updateUserForm.value.globalNotificationEnabled === true
+                      ? 'label.yes'
+                      : 'label.no'
+                    ) | translate
+                  }}</span>
+                  <cbc-hint
+                    [text]="'label.global.notification.hint' | translate"
+                    [floatEnable]="false"
+                    style="margin-left: 25px"
+                  ></cbc-hint>
+                </div>
+                <div class="field switch">
+                  <div class="label">{{
+                    'label.global.distribution' | translate
+                  }}</div>
+                  <input
+                    id="globalDistributionEnabled"
+                    class="cmn-toggle cmn-toggle-round"
+                    type="checkbox"
+                    formControlName="globalDistributionEnabled"
+                  />
+                  <label
+                    for="globalDistributionEnabled"
+                    class="nonBlockLabel"
+                  ></label>
+                  <span>{{
+                    (updateUserForm.value.globalDistributionEnabled === true
+                      ? 'label.yes'
+                      : 'label.no'
+                    ) | translate
+                  }}</span>
+                  <cbc-hint
+                    [text]="'label.global.distribution.hint' | translate"
+                    [floatEnable]="false"
+                    style="margin-left: 25px"
+                  ></cbc-hint>
+                </div>
+                <div class="field switch">
+                  <div class="label">{{
+                    'label.personal.information.visibility' | translate
+                  }}</div>
+                  <input
+                    id="personalInformationVisible"
+                    class="cmn-toggle cmn-toggle-round"
+                    type="checkbox"
+                    formControlName="personalInformationVisible"
+                  />
+                  <label
+                    for="personalInformationVisible"
+                    class="nonBlockLabel"
+                  ></label>
+                  <span>{{
+                    (updateUserForm.value.personalInformationVisible === true
+                      ? 'label.yes'
+                      : 'label.no'
+                    ) | translate
+                  }}</span>
+                </div>
+                <div class="field field--textarea">
+                  <label for="signature">{{
+                    'label.signature' | translate
+                  }}</label>
+                  <div class="editor-container">
+                    <p-editor
+                      formControlName="signature"
+                      [style]="{ height: '150px' }"
+                    >
+                      <p-header>
+                        <span class="ql-formats">
+                          <button class="ql-bold" aria-label="Bold"></button>
+                          <button
+                            class="ql-italic"
+                            aria-label="Italic"
+                          ></button>
+                          <button
+                            class="ql-underline"
+                            aria-label="Underline"
+                          ></button>
+                          <button
+                            class="ql-strike"
+                            aria-label="Strike"
+                          ></button>
+                        </span>
+                        <span class="ql-formats">
+                          <button
+                            class="ql-blockquote"
+                            aria-label="Strike"
+                          ></button>
+                          <button class="ql-link" aria-label="link"></button>
+                        </span>
+                      </p-header>
+                    </p-editor>
+                  </div>
+                </div>
+                <br />
+                <hr />
+                <br />
+                <span style="font-size: 16px">{{
+                  'label.privacy.statement' | translate
+                }}</span>
+                <br />
+                <br />
+                <a
+                  href="https://circabc.europa.eu/html/CIRCABC_privacy_statement.pdf"
+                  >{{ 'label.privacy.statement.title' | translate }}</a
+                >
+              </div>
+            </form>
+            <div class="field" *ngIf="processing">
+              <label
+                >{{ 'label.updating' | translate }}...
+                <cbc-spinner></cbc-spinner>
+              </label>
+            </div>
+
+            <br />
+            <!-- Buttons -->
+            <div class="buttons-group center" *ngIf="!processing">
+              <a
+                class="cta"
+                [routerLink]="['.']"
+                *ngIf="updateUserForm.status === 'VALID'"
+                (click)="update()"
+                >{{ 'label.update' | translate }}</a
+              >
+              <a class="button" [routerLink]="['.']" (click)="cancel()">{{
+                'label.cancel' | translate
+              }}</a>
+              <a
+                class="button"
+                style="float: right"
+                [routerLink]="['.']"
+                (click)="refreshFromCentralDB()"
+                >{{ 'label.refresh.central.db' | translate }}</a
+              >
+            </div>
+          </section>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<cbc-change-avatar
+  [showWizard]="launchChangeAvatar"
+  (modalHide)="changeAvatarClosed()"
+  (avatarUploaded)="avatarUploaded($event)"
+></cbc-change-avatar>

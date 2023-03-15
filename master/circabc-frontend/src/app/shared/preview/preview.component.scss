@@ -1,0 +1,35 @@
+.modal {
+  position: fixed;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 100%;
+  background: #fff;
+  border-radius: 4px;
+  max-height: 100%;
+  height: 100%;
+  z-index: 20;
+  font-size: 1.4rem;
+  transform: translate(-50%, -50%);
+}
+
+.modal-content {
+  padding: 0;
+  max-height: 100%;
+  overflow: auto;
+}
+
+p {
+  font-size: 0; /* Fixes inline block spacing */
+}
+span {
+  width: 100%;
+  display: inline-block;
+}
+span.align-right {
+  text-align: right;
+}
+
+span a {
+  font-size: 16px;
+  font-weight: bold;
+}

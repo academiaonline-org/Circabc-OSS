@@ -1,0 +1,161 @@
+<p>
+  {{ 'text.group.delete.introduction' | translate }}
+</p>
+<h3>1 {{ 'label.verifications' | translate }}</h3>
+<p>
+  {{ 'text.group.delete.step1.explanation' | translate }}
+  <br /><br />
+  <a data-cy="verify" class="button" (click)="verifyConditions()">{{
+    'label.verify' | translate
+  }}</a>
+  &nbsp;
+  <a class="button" [routerLink]="['..']">{{ 'label.cancel' | translate }}</a>
+  <span *ngIf="verifying"
+    >&nbsp;{{ 'label.verifying' | translate }}... <cbc-spinner></cbc-spinner
+  ></span>
+</p>
+<div *ngIf="!isReadyForDeletion() && verified">
+  <p *ngIf="conditions.lockedNodes && conditions.lockedNodes.length > 0">
+    {{ 'text.list.locked.nodes' | translate }}
+  </p>
+  <table *ngIf="conditions.lockedNodes && conditions.lockedNodes.length > 0">
+    <thead>
+      <tr>
+        <th>{{ 'label.name' | translate }}</th>
+        <th>{{ 'label.path' | translate }}</th>
+        <th class="actions">
+          {{ 'label.actions' | translate }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td></td>
+        <td></td>
+        <td [attr.rowspan]="conditions.lockedNodes.length + 1">
+          <a (click)="cleanLocks()">{{ 'label.remove.locks' | translate }}</a>
+          <cbc-horizontal-loader *ngIf="cleaningLocks"></cbc-horizontal-loader>
+          <br />
+          <img src="img/error-triangle-orange-16.png" alt="attention" />&nbsp;{{
+            'text.action.not.recoverable' | translate
+          }}
+        </td>
+      </tr>
+      <tr *ngFor="let lockedNode of conditions.lockedNodes">
+        <td class="name">{{ lockedNode.name }}</td>
+        <td>
+          <cbc-group-breadcrumb
+            [clickable]="false"
+            [node]="lockedNode.id"
+            [textColor]="'757575'"
+            [noMarginBottom]="true"
+            [displayName]="false"
+            [showHomeIcon]="false"
+          ></cbc-group-breadcrumb>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="conditions.sharedNodes && conditions.sharedNodes.length > 0">
+    {{ 'text.list.shared.nodes' | translate }}
+  </p>
+  <table *ngIf="conditions.sharedNodes && conditions.sharedNodes.length > 0">
+    <thead>
+      <tr>
+        <th>{{ 'label.name' | translate }}</th>
+        <th>{{ 'label.path' | translate }}</th>
+        <th class="actions">
+          {{ 'label.actions' | translate }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td></td>
+        <td></td>
+        <td [attr.rowspan]="conditions.sharedNodes.length + 1">
+          <a (click)="cleanSharedNodes()">{{
+            'label.remove.shared.spaces' | translate
+          }}</a>
+          <cbc-horizontal-loader
+            *ngIf="cleaningSharedNodes"
+          ></cbc-horizontal-loader>
+          <br />
+          <img src="img/error-triangle-orange-16.png" alt="attention" />&nbsp;{{
+            'text.action.not.recoverable' | translate
+          }}
+        </td>
+      </tr>
+      <tr *ngFor="let node of conditions.sharedNodes">
+        <td class="name">{{ node.name }}</td>
+        <td>
+          <cbc-group-breadcrumb
+            [clickable]="false"
+            [node]="node.id"
+            [textColor]="'757575'"
+            [noMarginBottom]="true"
+            [displayName]="false"
+            [showHomeIcon]="false"
+          ></cbc-group-breadcrumb>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="conditions.sharedProfiles && conditions.sharedProfiles.length > 0">
+    {{ 'text.list.shared.profiles' | translate }}
+  </p>
+  <table
+    *ngIf="conditions.sharedProfiles && conditions.sharedProfiles.length > 0"
+  >
+    <thead>
+      <tr>
+        <th>{{ 'label.profile' | translate }}</th>
+        <th class="actions">
+          {{ 'label.actions' | translate }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td></td>
+        <td [attr.rowspan]="conditions.sharedProfiles.length + 1">
+          <a (click)="cleanSharedProfiles()">{{
+            'label.remove.shared.profiles' | translate
+          }}</a>
+          <cbc-horizontal-loader
+            *ngIf="cleaningSharedProfiles"
+          ></cbc-horizontal-loader>
+          <br />
+          <img src="img/error-triangle-orange-16.png" alt="attention" />&nbsp;{{
+            'text.action.not.recoverable' | translate
+          }}
+        </td>
+      </tr>
+      <tr *ngFor="let profile of conditions.sharedProfiles">
+        <td>{{ profile.name }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div *ngIf="isReadyForDeletion() && verified">
+  <h3>2 {{ 'label.deletion' | translate }}</h3>
+  <p *ngIf="!deleting">
+    {{ 'text.group.deletion' | translate }}
+  </p>
+  <p *ngIf="!deleting">
+    <a
+      data-cy="delete-button"
+      class="button button--red"
+      (click)="deleteGroup()"
+      >{{ 'label.delete' | translate }}</a
+    >
+    &nbsp;
+    <a class="button" [routerLink]="['..']">{{ 'label.cancel' | translate }}</a>
+  </p>
+  <p *ngIf="deleting">
+    {{ 'label.deleting' | translate }}
+    <cbc-spinner [float]="'left'"></cbc-spinner>
+  </p>
+</div>

@@ -1,0 +1,31 @@
+.disable_a_href {
+  pointer-events: none;
+  background: linear-gradient(to bottom, #ccc 0%, #999 100%);
+  background-color: #ccc;
+}
+
+.box--group-summary ::ng-deep {
+  ul {
+    list-style: disc;
+    margin-left: 20px;
+  }
+
+  ol {
+    list-style: decimal;
+    margin-left: 20px;
+  }
+
+  .description-container {
+    max-height: 150px;
+    overflow: auto;
+
+    ::ng-deep p {
+      margin: 0 !important;
+    }
+  }
+}
+
+img.descriptor-icon {
+  float: left;
+  margin: 2em;
+}

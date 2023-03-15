@@ -1,0 +1,29 @@
+<section class="box box--next-events box--alternate-lines box--button">
+  <header class="header">
+    <span class="title">{{ 'event.my.next.events' | translate }}</span>
+  </header>
+  <div class="main main--listing">
+    <ul *ngIf="events !== undefined && events.length > 0">
+      <li *ngFor="let event of events" class="row">
+        <span class="date"
+          >{{ event.appointmentDate }} - {{ event.startTime }}</span
+        >
+        <a
+          [routerLink]="['/group', event.igId, 'agenda', event.id, 'details']"
+          >{{ event.title }}</a
+        >
+        <span class="hidable"
+          >({{ 'label.' + event.meetingStatus | translate }})</span
+        >
+      </li>
+    </ul>
+    <ul *ngIf="events === undefined || events.length === 0">
+      <li class="row">{{ 'label.nothing.to.display' | translate }}</li>
+    </ul>
+  </div>
+  <div class="footer">
+    <a class="footer__button" [routerLink]="['/me/calendar']">{{
+      'label.my.calendar' | translate
+    }}</a>
+  </div>
+</section>

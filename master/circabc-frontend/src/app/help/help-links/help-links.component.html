@@ -1,0 +1,37 @@
+<section class="contact-button">
+  <a [routerLink]="['/help/contact']"
+    >{{ 'contact.support' | translate }} <img src="img/email.png"
+  /></a>
+</section>
+
+<h2>{{ 'help.userful.links.title' | translate }}</h2>
+
+<p *ngIf="links.length === 0">
+  {{ 'help.userful.links.empty' | translate }}
+</p>
+
+<ul *ngIf="links.length > 0">
+  <li *ngFor="let link of links">
+    <a
+      class="alink"
+      [href]="sanitizeLinkRef(link.href)"
+      target="{{ getTarget(link.href) }}"
+      >{{ link.title | cbcI18n }}</a
+    >
+    <p *ngIf="isAdminOrSupport()" class="actions">
+      <a (click)="edit(link)">{{ 'label.edit' | translate }}</a>
+      <cbc-inline-delete
+        (deletionConfirmed)="deleteLink(link)"
+      ></cbc-inline-delete>
+    </p>
+  </li>
+</ul>
+
+<h2>{{ 'label.legal.notice' | translate }}</h2>
+<ul>
+  <li
+    ><a [routerLink]="['/help/legal-notice']">{{
+      'help.legal.notice.link.text' | translate
+    }}</a></li
+  >
+</ul>

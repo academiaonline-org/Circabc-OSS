@@ -1,0 +1,19 @@
+import { Environment } from 'environments/environment.interface';
+
+// tslint:disable:no-http-string
+export const environment: Environment = {
+  production: true,
+  alfrescoURL: 'https://webgate.ec.europa.eu/s-circabc/service/api',
+  circabcURL: 'https://webgate.ec.europa.eu/s-circabc/service/circabc',
+  serverURL: 'https://webgate.ec.europa.eu/s-circabc/',
+  baseHref: '/ui/',
+  nodeName: 'N1',
+  showUiSwitch: true,
+  environmentType: 'prod',
+  circabcRelease: 'echa',
+  aresBridgeEnabled: false,
+  aresBridgeServer: '',
+  aresBridgeURL: '',
+  aresBridgeKey: '',
+  aresBridgeUiURL: '',
+};

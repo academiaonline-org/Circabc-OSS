@@ -1,0 +1,22 @@
+<section
+  class="modal"
+  *ngIf="visible"
+  [class.modal-shown]="visible"
+  [class.modal-hidden]="!visible"
+  [ngStyle]="{ 'margin-top.px': 0 }"
+>
+  <p>
+    <span class="align-right">
+      <a (click)="onCancel()">X</a>
+    </span>
+  </p>
+
+  <section [ngClass]="contentClass">
+    <ng-content></ng-content>
+    <div class="field" *ngIf="executing">
+      <label
+        >{{ executingLabel | translate }}... <cbc-spinner></cbc-spinner
+      ></label>
+    </div>
+  </section>
+</section>

@@ -1,0 +1,24 @@
+<div class="cta cta--dots dropdown-trigger">
+  {{ 'label.actions' | translate }}
+  <div class="dropdown dropdown--add-file" *ngIf="showActionsDropdown">
+    <ul>
+      <li>
+        <a class="contact" [routerLink]="['./contact-category']">
+          {{ 'label.contact.category.admins' | translate }}
+        </a>
+      </li>
+      <li>
+        <a
+          class="request--group"
+          [routerLink]="['./group-request']"
+          [queryParams]="{
+            header: currentHeader ? currentHeader.id : '',
+            category: currentCategory ? currentCategory.id : ''
+          }"
+        >
+          {{ 'label.request.interest-group' | translate }}</a
+        >
+      </li>
+    </ul>
+  </div>
+</div>

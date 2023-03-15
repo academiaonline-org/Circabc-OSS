@@ -1,0 +1,57 @@
+<section class="upload-page">
+  <div class="file-input">
+    <cbc-file-input
+      (fileSelected)="addNewFiles($event)"
+      [disable]="uploading && !uploadFinished"
+      [hasGuestAccess]="targetNode?.hasGuestAccess"
+    ></cbc-file-input>
+  </div>
+
+  <div class="file-list" [class.step-hidden]="filesToUpload.length === 0">
+    <cbc-file-list
+      [fileList]="filesToUpload"
+      (fileListChange)="fileListChanged($event)"
+    ></cbc-file-list>
+  </div>
+
+  <div class="file-metadata" [class.step-hidden]="fileSelected === undefined">
+    <cbc-file-metadata
+      [file]="fileSelected"
+      (fileChange)="propagateFileChange($event)"
+      [pivots]="pivotDocuments"
+      [translations]="translations"
+    ></cbc-file-metadata>
+  </div>
+
+  <div class="upload-actions">
+    <div class="buttons-group">
+      <a
+        data-cy="upload"
+        class="cta"
+        *ngIf="!uploading && !uploadFinished && filesToUpload.length > 0"
+        (click)="uploadFiles()"
+      >
+        {{ 'label.upload' | translate }}</a
+      >
+      <a
+        class="button"
+        (click)="cancelOrClose()"
+        *ngIf="!uploading && !uploadFinished"
+        >{{ 'label.cancel' | translate }}</a
+      >
+      <span *ngIf="uploading"
+        >{{ 'label.uploading' | translate }}<cbc-spinner></cbc-spinner
+      ></span>
+      <a
+        data-cy="finish"
+        class="cta"
+        (click)="cancelOrClose()"
+        *ngIf="uploadFinished"
+        >{{ 'label.finish' | translate }}</a
+      >
+      <a (click)="startNewUpload()" *ngIf="uploadFinished" class="button">{{
+        'label.upload.finished.start.new' | translate
+      }}</a>
+    </div>
+  </div>
+</section>
