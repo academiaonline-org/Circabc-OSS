@@ -1,0 +1,50 @@
+{
+  "extends": "stylelint-config-standard",
+  "rules": {
+    "indentation": null,
+    "rule-empty-line-before": null,
+    "no-descending-specificity": null,
+    "declaration-colon-newline-after": null,
+    "function-name-case": [
+      "lower",
+      { "ignoreFunctions": ["DXImageTransform.Microsoft.gradient"] }
+    ],
+    "at-rule-no-unknown": null,
+    "declaration-block-no-shorthand-property-overrides": null,
+    "selector-pseudo-element-no-unknown": [
+      true,
+      { "ignorePseudoElements": ["hover", "/^ng-/"] }
+    ],
+    "property-no-unknown": [
+      true,
+      { "ignoreProperties": ["animate", "font-smoothing"] }
+    ],
+    "declaration-block-no-duplicate-properties": [
+      true,
+      {
+        "ignoreProperties": [
+          "background",
+          "font-size",
+          "border-radius",
+          "transform",
+          "display",
+          "font-family",
+          "white-space",
+          "content",
+          "vertical-align",
+          "padding",
+          "width",
+          "color",
+          "border-left-color"
+        ]
+      }
+    ],
+    "font-family-no-missing-generic-family-keyword": null,
+    "value-keyword-case": [
+      "lower",
+      {
+        "ignoreKeywords": ["fadeIn"]
+      }
+    ]
+  }
+}

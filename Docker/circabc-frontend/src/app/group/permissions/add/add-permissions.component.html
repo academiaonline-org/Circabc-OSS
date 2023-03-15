@@ -1,0 +1,94 @@
+<cbc-modal
+  [title]="'label.add'"
+  (ok)="addPermissions()"
+  (cancel)="cancelWizard()"
+  [okLabel]="'label.add'"
+  [(visible)]="showModal"
+  [(executing)]="adding"
+  [executingLabel]="'label.adding'"
+  [showOkButton]="isShowAddButton()"
+>
+  <form [formGroup]="newPermissionsForm">
+    <p>
+      {{ 'permissions.selection.explanation' | translate }}
+    </p>
+    <cbc-users-picker
+      [igId]="ig"
+      formControlName="invitedUsersOrProfiles"
+      [showSelectedList]="false"
+      (afterSelectionMade)="assign()"
+      [displayGuestRegistered]="true"
+    ></cbc-users-picker>
+  </form>
+  <p>
+    {{ 'permissions.future.configuration' | translate }}
+    <a (click)="toggleHelp()">
+      <img src="img/icon-help-blue.png" />
+    </a>
+  </p>
+  <table class="authorityTable">
+    <thead>
+      <tr>
+        <th>{{ 'label.who' | translate }}</th>
+        <th>{{ 'label.permission' | translate }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let pair of configModel">
+        <td>
+          <span class="authorityName">{{
+            getAuthorityDisplay(pair.authValue.authority)
+          }}</span>
+        </td>
+        <td>
+          <cbc-inline-select
+            [values]="options"
+            [value]="pair.authValue.permission"
+            [translationPrefix]="'permissions'"
+            (selectionChanged)="updateModel(pair.authKey, $event)"
+          ></cbc-inline-select>
+        </td>
+        <td>
+          <a
+            (click)="removePerm(pair.authKey)"
+            title="{{ 'label.delete' | translate }}"
+          >
+            <img src="img/icon-close-20x20.png" width="16" />
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div
+    class="help-layout"
+    [@helpLayoutVisibility]="showHelpLayout ? 'active' : 'inactive'"
+  >
+    <h2>{{ 'label.help' | translate }}</h2>
+    <h3>{{ 'permissions.more.information.title' | translate }}</h3>
+
+    <dl *ngIf="node && node.service === 'library'">
+      <dt>{{ 'permissions.LibNoAccess' | translate }}</dt>
+      <dd>{{ 'permissions.LibNoAccess.help' | translate }}</dd>
+      <dt>{{ 'permissions.LibAccess' | translate }}</dt>
+      <dd>{{ 'permissions.LibAccess.help' | translate }}</dd>
+      <dt>{{ 'permissions.LibEditOnly' | translate }}</dt>
+      <dd>{{ 'permissions.LibEditOnly.help' | translate }}</dd>
+      <dt *ngIf="!isContent()">{{ 'permissions.LibManageOwn' | translate }}</dt>
+      <dd *ngIf="!isContent()">{{
+        'permissions.LibManageOwn.help' | translate
+      }}</dd>
+      <dt>{{ 'permissions.LibFullEdit' | translate }}</dt>
+      <dd>{{ 'permissions.LibFullEdit.help' | translate }}</dd>
+      <dt>{{ 'permissions.LibAdmin' | translate }}</dt>
+      <dd>{{ 'permissions.LibAdmin.help' | translate }}</dd>
+    </dl>
+
+    <div class="actions">
+      <a class="button" (click)="toggleHelp()">{{
+        'label.close' | translate
+      }}</a>
+    </div>
+  </div>
+</cbc-modal>

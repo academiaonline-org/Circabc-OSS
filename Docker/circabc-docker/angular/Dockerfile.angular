@@ -1,0 +1,89 @@
+#################################################################################
+#       Copyright (C) 2020        Sebastian Francisco Colomar Bauza             #
+#       SPDX-License-Identifier:  GPL-2.0-only                                  #
+#################################################################################
+FROM 										\
+	academiaonline/circabc-oss:latest-maven                                 \
+	AS 									\
+	build
+#################################################################################
+ARG 										\
+	dir_build=/build
+ARG 										\
+	folder_angular=circabc-docker/angular
+#################################################################################
+WORKDIR 									\
+	${dir_build}
+#################################################################################
+RUN 										\
+	ls 									\
+	${dir_build}/${folder_angular}/dist/circabc/ 				\
+										;
+#################################################################################
+FROM 										\
+	nginx:1.18.0-alpine@sha256:d7038eae37cfa36cd8e286f6d6daf0df7a445a2da327517b3cde4ba1833adc0c \
+	AS 									\
+	production
+#################################################################################
+ARG 										\
+	dir_app=/usr/share/nginx/html
+ARG 										\
+	dir_build=/build
+ARG 										\
+	folder_angular=circabc-docker/angular
+#################################################################################
+WORKDIR 									\
+	${dir_app}
+#################################################################################
+RUN                                                                             \
+        for package in                                                          \
+                $(                                                              \
+                        for x in 0 1 2 3 4 5 6 7 8 9;                           \
+                        do                                                      \
+                                apk list                                        \
+                                |                                               \
+                                awk /nginx/'{ print $1 }'                       \
+                                |                                               \
+                                awk -F-$x  '{ print $1 }'                       \
+                                |                                               \
+                                grep -v '\-[0-9]';                              \
+                        done                                                    \
+                        |                                                       \
+                        sort                                                    \
+                        |                                                       \
+                        uniq                                                    \
+                        |                                                       \
+                        grep -v ^nginx$                                         \
+                );                                                              \
+        do                                                                      \
+                apk del $package;                                               \
+        done                                                                    \
+                                                                                ;
+#################################################################################
+RUN 										\
+	rm 	-f 								\
+			/etc/nginx/nginx.conf 					\
+	&&									\
+	rm 	-f 								\
+		-r 								\
+			/etc/nginx/conf.d/* 					\
+	&&									\
+	rm 	-f 								\
+		-r 								\
+			* 							\
+										;
+#################################################################################
+COPY 										\
+	--from=build 								\
+	${dir_build}/${folder_angular}/dist/circabc/ 				\
+	ui
+#################################################################################
+VOLUME                                                                          \
+        /var/cache/nginx                                                        \
+        /var/run
+#################################################################################
+CMD 										\
+	["nginx","-g","daemon off;"]
+#################################################################################
+# sudo docker build -f circabc-docker/angular/Dockerfile.angular --no-cache -t academiaonline/circabc-oss:latest-angular circabc-docker/angular
+#################################################################################

@@ -1,0 +1,14 @@
+@import '~css/global/variables-mixins-keyframes';
+
+$errorColor: red;
+
+.error-message {
+  color: $errorColor;
+  margin: 6px;
+  display: block;
+  margin-left: 164px;
+
+  @media screen and (max-width: $break-small) {
+    margin-left: 0;
+  }
+}

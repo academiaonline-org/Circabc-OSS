@@ -1,0 +1,86 @@
+@import '~css/global/variables-mixins-keyframes';
+
+.upload-page {
+  display: grid;
+  display: -ms-grid;
+  -ms-grid-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  -ms-grid-rows: 1fr 70px;
+  grid-template-rows: 1fr 70px;
+  grid-template-areas:
+    'input list metadata'
+    'actions actions actions';
+  grid-gap: 5px;
+  padding: 5px;
+  height: calc(100vh - 127px);
+  justify-items: stretch;
+  transition: 200ms;
+
+  @media screen and (max-width: $break-medium) {
+    -ms-grid-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    -ms-grid-rows: 150px auto 70px;
+    grid-template-rows: 150px auto 70px;
+    grid-template-areas:
+      'input input'
+      'list metadata'
+      'actions actions';
+  }
+
+  @media screen and (max-width: $break-small) {
+    -ms-grid-columns: 1fr;
+    grid-template-columns: 1fr;
+    -ms-grid-rows: 150px 70px 250px 350px;
+    grid-template-rows: 150px 70px 250px 350px;
+    grid-template-areas:
+      'input'
+      'actions'
+      'list'
+      'metadata';
+  }
+
+  .step-hidden {
+    opacity: 0;
+  }
+
+  .file-input,
+  .file-list,
+  .file-metadata,
+  .upload-actions {
+    padding: 15px 10px;
+    max-height: 100%;
+    overflow: auto;
+    transition: 500ms;
+  }
+
+  .file-input {
+    -ms-grid-row: 1;
+    -ms-grid-column: 1;
+    grid-area: input;
+  }
+
+  .file-list {
+    -ms-grid-row: 1;
+    -ms-grid-column: 2;
+    grid-area: list;
+  }
+
+  .file-metadata {
+    -ms-grid-row: 1;
+    -ms-grid-column: 3;
+    grid-area: metadata;
+  }
+
+  .upload-actions {
+    -ms-grid-row: 2;
+    -ms-grid-column: 1;
+    -ms-grid-column-span: 3;
+    grid-area: actions;
+    text-align: center;
+    font-size: 12px;
+
+    .buttons-group {
+      margin: 0;
+    }
+  }
+}

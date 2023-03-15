@@ -1,0 +1,57 @@
+<section class="member-card" *ngIf="user">
+  <header>
+    <img
+      *ngIf="user.firstname && user.lastname"
+      class="avatar"
+      [attr.src]="user.avatar | cbcDownload | cbcSecure"
+      title="avatar"
+    />
+    {{ user.firstname }} <br />
+    {{ user.lastname }}
+  </header>
+  <div class="details">
+    <h3>{{ 'user.contact.information' | translate }}</h3>
+    <table>
+      <tbody>
+        <tr *ngIf="user.userId">
+          <td class="label">{{ 'label.userid' | translate }}</td>
+          <td class="value">{{ user.userId }}</td>
+        </tr>
+        <tr *ngIf="user.email && getUserVisibility()">
+          <td class="label">{{ 'label.email' | translate }}</td>
+          <td class="value">{{ user.email }}</td>
+        </tr>
+        <tr *ngIf="user.phone && getUserVisibility()">
+          <td class="label">{{ 'label.phone' | translate }}</td>
+          <td class="value">{{ user.phone }}</td>
+        </tr>
+        <tr *ngIf="user.properties && getUserVisibility()">
+          <td class="label">{{ 'label.title' | translate }}</td>
+          <td class="value">{{ user.properties.title }}</td>
+        </tr>
+        <tr *ngIf="user.properties && getUserVisibility()">
+          <td class="label">{{ 'label.organisation' | translate }}</td>
+          <td class="value">{{ user.properties.organisation }}</td>
+        </tr>
+        <tr *ngIf="user.properties && getUserVisibility()">
+          <td class="label">{{ 'label.postal.address' | translate }}</td>
+          <td class="value">{{ user.properties.address }}</td>
+        </tr>
+        <tr *ngIf="user.properties && getUserVisibility()">
+          <td class="label">{{ 'label.fax' | translate }}</td>
+          <td class="value">{{ user.properties.fax }}</td>
+        </tr>
+        <tr *ngIf="user.properties && getUserVisibility()">
+          <td class="label">{{ 'label.description' | translate }}</td>
+          <td class="value">{{ user.properties.description }}</td>
+        </tr>
+        <tr *ngIf="user.properties">
+          <td class="label">{{ 'label.global.notification' | translate }}</td>
+          <td class="value">{{
+            user.properties.globalNotificationEnabled ? 'ON' : 'OFF'
+          }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

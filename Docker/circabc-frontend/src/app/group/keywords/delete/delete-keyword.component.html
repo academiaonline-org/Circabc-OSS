@@ -1,0 +1,45 @@
+<a (click)="showModal = true" class="delete">{{
+  'label.delete' | translate
+}}</a>
+
+<!-- MODAL BOX -->
+<div
+  class="black-overlayer"
+  *ngIf="showModal"
+  [class.overlayer-shown]="showModal"
+  [class.overlayer-hidden]="!showModal"
+></div>
+<section
+  class="modal"
+  *ngIf="showModal"
+  [class.modal-shown]="showModal"
+  [class.modal-hidden]="!showModal"
+  style="margin-top: 0"
+>
+  <a class="close-icon" (click)="cancelWizard('close')"></a>
+  <header>
+    <h2 class="title">{{ 'label.delete' | translate }}</h2>
+  </header>
+
+  <section class="modal-content">
+    {{ 'keyword.delete.confirmation' | translate }}
+    <br /><br />
+    <cbc-keyword-tag [keyword]="keyword" *ngIf="keyword"></cbc-keyword-tag>
+    <br /><br />
+    <div class="field deletingBox" *ngIf="deleting">
+      <label
+        >{{ 'label.deleting' | translate }}... <cbc-spinner></cbc-spinner
+      ></label>
+    </div>
+  </section>
+
+  <section class="modal-footer">
+    <!-- Buttons -->
+    <div class="buttons-group" *ngIf="!deleting">
+      <a class="cta" (click)="delete()">{{ 'label.delete' | translate }}</a>
+      <a class="button" (click)="cancelWizard('close')">{{
+        'label.cancel' | translate
+      }}</a>
+    </div>
+  </section>
+</section>

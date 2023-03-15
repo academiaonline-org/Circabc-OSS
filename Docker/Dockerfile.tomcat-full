@@ -1,0 +1,129 @@
+#################################################################################
+#       Copyright (C) 2020        Sebastian Francisco Colomar Bauza             #
+#       SPDX-License-Identifier:  GPL-2.0-only                                  #
+#################################################################################
+FROM 										\
+	alpine \
+	AS 									\
+	zip
+#################################################################################
+ARG 										\
+	zip=alfresco-community-4.2.f.zip
+#################################################################################
+WORKDIR 									\
+	${zip}
+#################################################################################
+RUN 										\
+	apk add curl 								\
+										;
+#################################################################################
+RUN 										\
+	curl 									\
+		--location 							\
+		--output 							\
+			${zip} 							\
+		https://download.alfresco.com/release/community/4.2.f-build-00012/${zip} \
+										;
+#################################################################################
+RUN 										\
+	unzip ${zip} 								\
+										;
+#################################################################################
+FROM 										\
+	maven:3.6.3-openjdk-15@sha256:e8ab59fe2b7dc16643e8f38a2e7df7f26a72be377ab15c4224301fa9bd5ab55f \
+	AS 									\
+	build
+#################################################################################
+ARG 										\
+	dir_build=/build
+ARG 										\
+	folder_angular=circabc-docker/angular
+ARG 										\
+	folder_backend=circabc-backend/target
+ARG 										\
+	folder_frontend=circabc-frontend/dist/circabc
+ARG 										\
+	folder_tomcat=circabc-docker/tomcat
+ARG 										\
+	zip=alfresco-community-4.2.f.zip
+#################################################################################
+WORKDIR 									\
+	${dir_build}
+#################################################################################
+COPY 										\
+	.					 				\
+	.
+#################################################################################
+COPY 										\
+	--from=zip 								\
+	${zip}/web-server/webapps/alfresco.war	 				\
+	circabc-resources/
+#################################################################################
+RUN 										\
+	mvn clean 								\
+	&& 									\
+	mvn clean package 							\
+		-Dbackend-target.env=tomcat-docker 				\
+		-Dfrontend-target.env=docker 					\
+		-Dserver.node=N2 						\
+										;
+#################################################################################
+RUN 										\
+	mkdir -p 								\
+		${folder_tomcat}/dist/ 						\
+		${folder_angular}/dist/ 					\
+	&& 									\
+	cp -fv 									\
+		${folder_backend}/circabc.war 					\
+		${folder_tomcat}/dist/ 						\
+	&& 									\
+	cp -fv 									\
+		-r 								\
+		${folder_frontend} 						\
+		${folder_angular}/dist/ 					\
+										;
+#################################################################################
+FROM 										\
+	tomcat:8.5.41-jdk8@sha256:08f16a194f14053d53f5bdbd1c09d871f6e7e680019cda86bb93ed02d84e7758 \
+	AS 									\
+	production
+#################################################################################
+ARG 										\
+	dir_app=/usr/local/tomcat
+ARG 										\
+	dir_build=/build
+ARG 										\
+	folder_tomcat=circabc-docker/tomcat
+#################################################################################
+WORKDIR 									\
+	${dir_app}
+#################################################################################
+RUN 										\
+	rm -rf 									\
+		webapps/ROOT 							\
+		webapps/examples 						\
+		webapps/manager 						\
+	&&									\
+	chmod -R g+w webapps							\
+										;
+#################################################################################
+COPY 										\
+	--from=build 								\
+	${dir_build}/${folder_tomcat}/dist/circabc.war 				\
+	webapps/ROOT.war
+COPY 										\
+	${folder_tomcat}/lib/ecas-weblogic-12.2.1-authprovider-4.26.3.jar 	\
+	lib/
+COPY 										\
+	${folder_tomcat}/lib/mysql-connector-java-5.1.48.jar 			\
+	lib/
+COPY 										\
+	${folder_tomcat}/conf/context.xml 					\
+	conf/
+COPY 										\
+	${folder_tomcat}/wait-for-it.sh 					\
+	.
+#################################################################################
+CMD 										\
+	["./wait-for-it.sh","db:3306","--timeout=0","--strict","--","catalina.sh","run"]
+#################################################################################

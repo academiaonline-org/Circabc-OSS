@@ -1,0 +1,148 @@
+#################################################################################
+#       Copyright (C) 2020        Sebastian Francisco Colomar Bauza             #
+#       SPDX-License-Identifier:  GPL-2.0-only                                  #
+#################################################################################
+FROM 										\
+	alpine 									\
+	AS 									\
+	zip
+#################################################################################
+ARG 										\
+	zip=alfresco-community-4.2.f.zip
+#################################################################################
+WORKDIR 									\
+	${zip}
+#################################################################################
+RUN 										\
+	apk add curl 								\
+										;
+#################################################################################
+RUN 										\
+	curl 									\
+		--location 							\
+		--output 							\
+			${zip} 							\
+		https://download.alfresco.com/release/community/4.2.f-build-00012/${zip} \
+										;
+#################################################################################
+RUN 										\
+	unzip ${zip} 								\
+										;
+#################################################################################
+FROM 										\
+	maven:3.6.3-openjdk-15@sha256:e8ab59fe2b7dc16643e8f38a2e7df7f26a72be377ab15c4224301fa9bd5ab55f \
+	AS 									\
+	build
+#################################################################################
+ARG 										\
+	NO_PROXY
+ARG 										\
+	PROXY_HOST
+ARG 										\
+	PROXY_PASS
+ARG 										\
+	PROXY_PORT
+ARG 										\
+	PROXY_USER
+ARG 										\
+	REPO_HOST
+ARG 										\
+	REPO_PASS
+ARG 										\
+	REPO_USER
+#################################################################################
+ARG 										\
+	settings_orig=usr/share/maven/conf/settings.xml
+#################################################################################
+COPY 										\
+	${settings_orig} 							\
+	/${settings_orig}
+#################################################################################
+RUN 										\
+	sed --in-place 								\
+		s/NO_PROXY/${NO_PROXY}/ 					\
+		/${settings_orig}
+RUN 										\
+	sed --in-place 								\
+		s/PROXY_HOST/${PROXY_HOST}/ 					\
+		/${settings_orig}
+RUN 										\
+	sed --in-place 								\
+		s/PROXY_PASS/${PROXY_PASS}/ 					\
+		/${settings_orig}
+RUN 										\
+	sed --in-place 								\
+		s/PROXY_PORT/${PROXY_PORT}/ 					\
+		/${settings_orig}
+RUN 										\
+	sed --in-place 								\
+		s/PROXY_USER/${PROXY_USER}/ 					\
+		/${settings_orig}
+RUN 										\
+	sed --in-place 								\
+		s/REPO_HOST/${REPO_HOST}/ 					\
+		/${settings_orig}
+RUN 										\
+	sed --in-place 								\
+		s/REPO_PASS/${REPO_PASS}/ 					\
+		/${settings_orig}
+RUN 										\
+	sed --in-place 								\
+		s/REPO_USER/${REPO_USER}/ 					\
+		/${settings_orig}
+#################################################################################
+ARG 										\
+	dir_build=/build
+ARG 										\
+	folder_angular=circabc-docker/angular
+ARG 										\
+	folder_backend=circabc-backend/target
+ARG 										\
+	folder_frontend=circabc-frontend/dist/circabc
+ARG 										\
+	folder_tomcat=circabc-docker/tomcat
+ARG 										\
+	zip=alfresco-community-4.2.f.zip
+#################################################################################
+WORKDIR 									\
+	${dir_build}
+#################################################################################
+COPY 										\
+	.					 				\
+	.
+#################################################################################
+COPY 										\
+	--from=zip 								\
+	${zip}/web-server/webapps/alfresco.war	 				\
+	circabc-resources/
+#################################################################################
+RUN 										\
+	mvn clean 								\
+	&& 									\
+	mvn clean package 							\
+		-Dbackend-target.env=tomcat-docker 				\
+		-Dfrontend-target.env=docker 					\
+		-Dserver.node=N2 						\
+										;
+#################################################################################
+RUN 										\
+	mkdir -p 								\
+		${folder_tomcat}/dist/ 						\
+		${folder_angular}/dist/ 					\
+	&& 									\
+	cp -fv 									\
+		${folder_backend}/circabc.war 					\
+		${folder_tomcat}/dist/ 						\
+	&& 									\
+	cp -fv 									\
+		-r 								\
+		${folder_frontend} 						\
+		${folder_angular}/dist/ 					\
+										;
+#################################################################################
+# source alfresco.conf
+# source ../.proxyrc
+# sudo docker build --build-arg NO_PROXY=$NO_PROXY --build-arg PROXY_HOST=$PROXY_HOST --build-arg PROXY_PASS=$PROXY_PASS --build-arg PROXY_PORT=$PROXY_PORT --build-arg PROXY_USER=$PROXY_USER --build-arg REPO_HOST=$REPO_HOST --build-arg REPO_PASS=$REPO_PASS --build-arg REPO_USER=$REPO_USER -f Dockerfile.maven --no-cache -t academiaonline/circabc-oss:latest-maven .
+#################################################################################
+# sudo docker build -f Dockerfile.maven --no-cache -t academiaonline/circabc-oss:latest-maven .
+#################################################################################

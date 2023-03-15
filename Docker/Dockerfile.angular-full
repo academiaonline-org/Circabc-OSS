@@ -1,0 +1,150 @@
+#################################################################################
+#       Copyright (C) 2020        Sebastian Francisco Colomar Bauza             #
+#       SPDX-License-Identifier:  GPL-2.0-only                                  #
+#################################################################################
+FROM 										\
+	alpine \
+	AS 									\
+	zip
+#################################################################################
+ARG 										\
+	zip=alfresco-community-4.2.f.zip
+#################################################################################
+WORKDIR 									\
+	${zip}
+#################################################################################
+RUN 										\
+	apk add curl 								\
+										;
+#################################################################################
+RUN 										\
+	curl 									\
+		--location 							\
+		--output 							\
+			${zip} 							\
+		https://download.alfresco.com/release/community/4.2.f-build-00012/${zip} \
+										;
+#################################################################################
+RUN 										\
+	unzip ${zip} 								\
+										;
+#################################################################################
+FROM 										\
+	maven:3.6.3-openjdk-15@sha256:e8ab59fe2b7dc16643e8f38a2e7df7f26a72be377ab15c4224301fa9bd5ab55f \
+	AS 									\
+	build
+#################################################################################
+ARG 										\
+	dir_build=/build
+ARG 										\
+	folder_angular=circabc-docker/angular
+ARG 										\
+	folder_backend=circabc-backend/target
+ARG 										\
+	folder_frontend=circabc-frontend/dist/circabc
+ARG 										\
+	folder_tomcat=circabc-docker/tomcat
+ARG 										\
+	zip=alfresco-community-4.2.f.zip
+#################################################################################
+WORKDIR 									\
+	${dir_build}
+#################################################################################
+COPY 										\
+	.					 				\
+	.
+#################################################################################
+COPY 										\
+	--from=zip 								\
+	${zip}/web-server/webapps/alfresco.war	 				\
+	circabc-resources/
+#################################################################################
+RUN 										\
+	mvn clean 								\
+	&& 									\
+	mvn clean package 							\
+		-Dbackend-target.env=tomcat-docker 				\
+		-Dfrontend-target.env=docker 					\
+		-Dserver.node=N2 						\
+										;
+#################################################################################
+RUN 										\
+	mkdir -p 								\
+		${folder_tomcat}/dist/ 						\
+		${folder_angular}/dist/ 					\
+	&& 									\
+	cp -fv 									\
+		${folder_backend}/circabc.war 					\
+		${folder_tomcat}/dist/ 						\
+	&& 									\
+	cp -fv 									\
+		-r 								\
+		${folder_frontend} 						\
+		${folder_angular}/dist/ 					\
+										;
+#################################################################################
+FROM                                                                            \
+        nginx:1.18.0-alpine@sha256:d7038eae37cfa36cd8e286f6d6daf0df7a445a2da327517b3cde4ba1833adc0c \
+        AS                                                                      \
+        production
+#################################################################################
+ARG                                                                             \
+        dir_app=/usr/share/nginx/html
+ARG                                                                             \
+        dir_build=/build
+ARG                                                                             \
+        folder_angular=circabc-docker/angular
+#################################################################################
+WORKDIR                                                                         \
+        ${dir_app}
+#################################################################################
+RUN                                                                             \
+        for package in                                                          \
+                $(                                                              \
+                        for x in 0 1 2 3 4 5 6 7 8 9;                           \
+                        do                                                      \
+                                apk list                                        \
+                                |                                               \
+                                awk /nginx/'{ print $1 }'                       \
+                                |                                               \
+                                awk -F-$x  '{ print $1 }'                       \
+                                |                                               \
+                                grep -v '\-[0-9]';                              \
+                        done                                                    \
+                        |                                                       \
+                        sort                                                    \
+                        |                                                       \
+                        uniq                                                    \
+                        |                                                       \
+                        grep -v ^nginx$                                         \
+                );                                                              \
+        do                                                                      \
+                apk del $package;                                               \
+        done                                                                    \
+                                                                                ;
+#################################################################################
+RUN                                                                             \
+        rm      -f                                                              \
+                        /etc/nginx/nginx.conf                                   \
+        &&                                                                      \
+        rm      -f                                                              \
+                -r                                                              \
+                        /etc/nginx/conf.d/*                                     \
+        &&                                                                      \
+        rm      -f                                                              \
+                -r                                                              \
+                        *                                 			\
+                                                                                ;
+#################################################################################
+COPY                                                                            \
+        --from=build                                                            \
+        ${dir_build}/${folder_angular}/dist/circabc/                            \
+        ui
+#################################################################################
+VOLUME                                                                          \
+        /var/cache/nginx                                                        \
+        /var/run
+#################################################################################
+CMD 										\
+	["nginx","-g","daemon off;"]
+#################################################################################

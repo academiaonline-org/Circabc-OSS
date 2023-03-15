@@ -1,0 +1,40 @@
+<h2>{{ 'admin.general.page.title' | translate }}</h2>
+<form [formGroup]="igForm">
+  <div class="field">
+    <label for="name">{{ 'label.name' | translate }}</label>
+    <input type="text" formControlName="name" #nameInputFieldElement />
+    <cbc-control-message [control]="nameControl"></cbc-control-message>
+  </div>
+  <cbc-multilingual-input
+    formControlName="title"
+    [label]="'label.title' | translate"
+    [placeholder]="'label.title' | translate"
+    [lang]="'en'"
+  ></cbc-multilingual-input>
+  <cbc-multilingual-input
+    formControlName="description"
+    [label]="'label.description' | translate"
+    [placeholder]="'label.description' | translate"
+    [lang]="'en'"
+    [textarea]="true"
+  ></cbc-multilingual-input>
+  <cbc-multilingual-input
+    formControlName="contact"
+    [label]="'label.contact' | translate"
+    [placeholder]="'label.contact' | translate"
+    [lang]="'en'"
+    [textarea]="true"
+  ></cbc-multilingual-input>
+  <div class="field" *ngIf="saving">
+    <label
+      >{{ 'label.saving' | translate }}...
+      <cbc-spinner></cbc-spinner>
+    </label>
+  </div>
+</form>
+<div class="buttons-group" *ngIf="!saving">
+  <a class="cta" (click)="save()" [class.disabled]="!igForm.valid">{{
+    'label.save' | translate
+  }}</a>
+  <a class="button" (click)="cancel()">{{ 'label.cancel' | translate }}</a>
+</div>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2006 European Community Licensed under the EUPL, Version 1.1 
+	or – as soon they will be approved by the European Commission - subsequent 
+	versions of the EUPL (the "Licence"); You may not use this work except in 
+	compliance with the Licence. You may obtain a copy of the Licence at: https://joinup.ec.europa.eu/software/page/eupl 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the Licence for 
+	the specific language governing permissions and limitations under the Licence. -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AresBridge">
+
+    <insert id="insert_request" parameterType="map">
+        insert into
+        cbc_ab_request ( ab_transaction_id, node_uuid, version_label)
+        values ( #{transactionID}, #{nodeId}, #{versionLabel})
+    </insert>
+
+    <insert id="insert_response" parameterType="map">
+        insert into
+        cbc_ab_response ( ab_transaction_id, request_type, document_id, save_number, registration_number)
+        values ( #{transactionID}, #{requestType}, #{documentID,jdbcType=VARCHAR}, #{saveNumber,jdbcType=VARCHAR},
+        #{registrationNumber,jdbcType=VARCHAR} )
+    </insert>
+
+    <select id="select_responses" resultType="AresBridgeDAO">
+        SELECT
+        cbc_ab_request.node_uuid nodeId,
+        cbc_ab_request.version_label versionLabel,
+        cbc_ab_request.ab_transaction_id transactionId,
+        cbc_ab_response.request_type requestType,
+        cbc_ab_response.document_id documentId,
+        cbc_ab_response.save_number saveNumber,
+        cbc_ab_response.registration_number registrationNumber
+        FROM
+        cbc_ab_response,
+        cbc_ab_request
+        WHERE cbc_ab_request.ab_transaction_id= cbc_ab_response.ab_transaction_id
+    </select>
+
+    <delete id="delete_response" parameterType="map">
+		DELETE
+		FROM cbc_ab_response
+		WHERE ab_transaction_id= #{transactionId} AND request_type = #{requestType}
+	</delete>
+</mapper>

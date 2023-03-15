@@ -1,0 +1,103 @@
+<cbc-horizontal-loader
+  *ngIf="loadingMemberships || loadingCategories"
+></cbc-horizontal-loader>
+<div class="wrap page-container">
+  <h1 *ngIf="isAdmin">
+    {{ 'label.alfresco' | translate }} {{ 'label.administrator' | translate }}
+  </h1>
+  <h1 *ngIf="isCicabcAdmin">
+    {{ 'label.circabc' | translate }} {{ 'label.administrator' | translate }}
+    <button
+      data-cy="create-user"
+      type="submit"
+      class="cta"
+      (click)="showWizard = true"
+    >
+      {{ 'user.create.action' | translate }}
+    </button>
+
+    <cbc-create-user
+      [showWizard]="showWizard"
+      (modalHide)="createUserWizardClosed($event)"
+    ></cbc-create-user>
+  </h1>
+  <section class="box box--alternate-lines" *ngIf="categories.length > 0">
+    <header class="header">
+      <span class="title">
+        {{ 'explorer.categories' | translate }}
+      </span>
+    </header>
+    <div class="main main--listing">
+      <h3>
+        {{ 'user.categories.roles.help' | translate }}
+      </h3>
+      <ul>
+        <li class="row"></li>
+        <li
+          data-cy="categories"
+          *ngFor="let category of categories"
+          class="row"
+        >
+          <div class="profile">
+            {{ 'label.administrator' | translate }}
+          </div>
+          <span class="group-title"
+            ><a [routerLink]="['/category', category.id, 'details']">{{
+              getNameOrTitle(category)
+            }}</a></span
+          >
+          <br />
+          <span class="grey-name">
+            {{ category.name }}
+          </span>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <section class="box box--alternate-lines">
+    <header class="header">
+      <span class="title">
+        {{ 'explorer.groups' | translate }}
+      </span>
+    </header>
+    <div class="main main--listing">
+      <h3>
+        {{ 'user.groups.roles.help' | translate }}
+      </h3>
+      <ul>
+        <li class="row"></li>
+        <li data-cy="groups" *ngFor="let membership of memberships" class="row">
+          <div class="profile">
+            {{ getNameOrTitle(membership.profile) }}
+            &nbsp;|&nbsp;
+            <a
+              title="{{ 'label.leave' | translate }}"
+              (click)="showConfirmation(membership.interestGroup)"
+            ></a>
+          </div>
+          <a
+            [routerLink]="['/group', membership.interestGroup?.id]"
+            class="group-title"
+            >{{ getNameOrTitle(membership.interestGroup) }}</a
+          >
+          <br />
+          <span class="grey-name">
+            {{ membership.interestGroup?.name }}
+          </span>
+        </li>
+        <li *ngIf="memberships.length === 0" class="row">
+          <p>
+            {{ 'label.nothing.to.display' | translate }}
+          </p>
+        </li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<cbc-quit-group
+  [(show)]="displayQuitGroup"
+  [group]="selectedGroup"
+  [username]="username"
+  (membershipRemoved)="refresh()"
+></cbc-quit-group>

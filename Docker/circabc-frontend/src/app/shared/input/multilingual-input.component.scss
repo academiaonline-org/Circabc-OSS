@@ -1,0 +1,118 @@
+@import '~css/global/variables-mixins-keyframes';
+
+.icon--world {
+  background: url(/img/icon-world-20x20-grey.png) no-repeat;
+  opacity: 0.6;
+}
+
+.input-lang {
+  color: #ccc;
+  margin-right: 5px;
+}
+
+.icon--textarea {
+  left: -510px;
+}
+
+.field--with-icon > textarea {
+  padding-left: 40px;
+}
+
+.checked {
+  background-color: #035;
+  color: #fff;
+}
+
+.clean-action {
+  font-size: bold;
+}
+
+.editor-container {
+  display: inline-block;
+  max-width: 500px;
+
+  @media screen and (max-width: $break-medium) {
+    width: 100% !important;
+    margin-top: 10px;
+  }
+
+  @media screen and (max-width: $break-small) {
+    width: calc(100% - 60px) !important;
+    margin-top: 10px;
+  }
+}
+
+.label--top-align {
+  vertical-align: top;
+}
+
+.multilang-input {
+  margin-left: 5px;
+}
+
+:host ::ng-deep div > div.ui-editor-content.ql-container.ql-snow > div.ql-editor > ol > li {
+  display: block;
+}
+
+:host ::ng-deep div > div.ui-editor-content.ql-container.ql-snow > div.ql-editor > ul > li {
+  display: block;
+}
+
+.lang-selector {
+  display: inline-block;
+  margin-left: -18px;
+  position: relative;
+  top: -1px;
+
+  select::-ms-expand {
+    display: none;
+  }
+
+  select {
+    padding: 10px;
+    padding-right: 24px;
+    border: 0;
+    cursor: pointer;
+    appearance: none;
+    color: #035;
+    text-transform: uppercase;
+    background-color: #fff;
+    background-image: url(/img/sort-down.png);
+    background-repeat: no-repeat, repeat;
+    background-position: right 0.8em top 50%, 0 0;
+    background-size: 0.75em auto, 100%;
+
+    &:hover {
+      background-color: #035;
+      color: #fff;
+      background-image: url(/img/sort-down-white.png);
+      border-radius: 3px;
+    }
+
+    option {
+      background-color: #fff;
+      color: #035;
+      text-transform: uppercase;
+    }
+  }
+}
+
+.lang-selector--textarea {
+  top: -140px;
+  margin-left: 5px;
+}
+
+@media screen and (max-width: $break-small) {
+  input {
+    width: calc(100% - 60px) !important;
+    padding-left: 10px;
+  }
+
+  .icon--world {
+    display: none;
+  }
+
+  .lang-selector {
+    margin-left: 0;
+  }
+}
