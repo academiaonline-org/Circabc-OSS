@@ -35,7 +35,6 @@ spec:
           mountPath: /var/run
       volumes:
       - name: nginx-cache
-        emptyDir: {}
       - name: nginx-conf
         configMap:
           items:
@@ -49,10 +48,9 @@ spec:
             path: default.conf
           secretName: default.conf-angular
       - name: nginx-run
-        emptyDir: {}
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: db
 spec:
@@ -60,6 +58,7 @@ spec:
   selector:
     matchLabels:
       app: db
+  serviceName: db
   template:
     metadata:
       labels:
@@ -130,7 +129,6 @@ spec:
             path: setup.sql
           secretName: setup-db
       - name: db-mysql
-        emptyDir: {}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -167,7 +165,6 @@ spec:
           mountPath: /var/run
       volumes:
       - name: nginx-cache
-        emptyDir: {}
       - name: nginx-conf
         configMap:
           items:
@@ -181,7 +178,6 @@ spec:
             path: default.conf
           secretName: default.conf-proxy
       - name: nginx-run
-        emptyDir: {}          
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -211,9 +207,7 @@ spec:
           mountPath: /usr/local/tomcat/circabc_shared
       volumes:
       - name: tomcat-local
-        emptyDir: {}
       - name: tomcat-shared
-        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
